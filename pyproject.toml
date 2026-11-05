@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools==84.1.0", "wheel==0.48.0"]
+requires = ["setuptools==84.2.1", "wheel==0.48.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -14,7 +14,7 @@ dependencies = [
   "numpy>=1.26,<3.0",
   "librosa>=0.10.1,<0.12.0",
   "matplotlib>=3.7,<4.0",
-  "pandas>=2.2,<3.0",
+  "pandas>=2.2,<4.0",
   "safetensors>=0.4.5,<1.0",
   "PyYAML>=6.0,<7.0",
 ]
@@ -24,7 +24,7 @@ ricordi = "macchina_ricordi.cli:main"
 
 [project.optional-dependencies]
 dev = [
-  "pytest==9.1.1",
+  "pytest==9.2.0",
   "ruff>=0.6,<0.18",
 ]
 semantic-listening = [

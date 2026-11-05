@@ -1,0 +1,37 @@
+diff --git a/audiocraft/solvers/base.py b/audiocraft/solvers/base.py
+index 0432e44..1dba1fa 100644
+--- a/audiocraft/solvers/base.py
++++ b/audiocraft/solvers/base.py
+@@ -444,8 +444,12 @@ class StandardSolver(ABC, flashy.BaseSolver):
+         self.logger.info("Model hash: %s", model_hash(self.model))
+
+         if replay_metrics and len(self.history) > 0:
+-            self.logger.info("Replaying past metrics...")
++            self.logger.info(
++                "Resuming from epoch %d. Replaying metrics for %d past epoch(s)...",
++                len(self.history) + 1, len(self.history)
++            )
+             for epoch, stages in enumerate(self.history):
++                self.logger.info("Epoch %d/%d (replayed from checkpoint):", epoch + 1, len(self.history))
+                 for stage_name, metrics in stages.items():
+                     # We manually log the metrics summary to the result logger
+                     # as we don't want to add them to the pending metrics
+@@ -491,6 +495,18 @@ class StandardSolver(ABC, flashy.BaseSolver):
+         assert len(self.state_dict()) > 0
+         self.restore(replay_metrics=True)  # load checkpoint and replay history
+         self.log_hyperparams(dict_from_config(self.cfg))
++        remaining = self.cfg.optim.epochs - self.epoch + 1
++        if remaining > 0:
++            self.logger.info(
++                "Training will run from epoch %d to %d (%d epoch(s) remaining).",
++                self.epoch, self.cfg.optim.epochs, remaining
++            )
++        else:
++            self.logger.info(
++                "Training complete: epoch %d already reached optim.epochs=%d. "
++                "Use optim.epochs=<higher> to continue training.",
++                self.epoch - 1, self.cfg.optim.epochs
++            )
+         for epoch in range(self.epoch, self.cfg.optim.epochs + 1):
+             if self.should_stop_training():
+                 return

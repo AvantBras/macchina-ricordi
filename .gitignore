@@ -1,0 +1,65 @@
+# A leading / means the root only: macchina_ricordi/data/ and macchina_ricordi/models/ are code.
+
+# Python and tool caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.env
+.env.*
+!.env.example
+
+# Environments: .venv (the package) and .venv-musicgen (AudioCraft/Dora); .venv-appliance*, .venv-nano
+.venv/
+.venv-*/
+
+# The engine and its experiments: the pinned AudioCraft checkout, Dora's XPs, downloaded init checkpoints
+.audiocraft/
+.dora/
+.checkpoint_cache/
+
+# Downloaded/exported portable snapshots are release assets, not source history.
+/models/
+*.safetensors
+*.th
+
+# Data, never tracked. Sources: library/. Datasets: datasets/.
+# The legacy workspaces stay at the root, frozen: their records hold absolute paths.
+/library/
+/examples/
+/datasets/
+/data/
+.macchina_ricordi_*/
+.workspace_*/
+.bear_bones_black_zone/
+.lostboi_micro_uncond/
+.micro_uncond_ppc_ramses/
+.midwife_micro_uncond/
+
+# Outputs: sessions, checkpoints, scores, jobs. merged_checkpoints/ is the frozen pre-May home of merges.
+/artifacts/
+/merged_checkpoints/
+docs/AI_conv_sharing/
+.docs-ci/
+
+# The appliance's build products (docs/appliance.md)
+/build/
+/dist/
+/boxes/
+*.nrbox
+*.nrsrc
+
+# Historical local autoencoder experiments
+.nano_work/
+/vendor/
+
+# Media is never tracked
+*.flac
+*.wav
+*.mp3
+*.jpg
+*.jpeg
+*.png
+*.pdf
+*.nfo

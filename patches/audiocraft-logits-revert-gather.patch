@@ -1,0 +1,22 @@
+diff --git a/audiocraft/modules/codebooks_patterns.py b/audiocraft/modules/codebooks_patterns.py
+index 386df58..aed0df0 100644
+--- a/audiocraft/modules/codebooks_patterns.py
++++ b/audiocraft/modules/codebooks_patterns.py
+@@ -261,11 +261,13 @@ class Pattern:
+         indexes, mask = self._build_reverted_sequence_scatter_indexes(
+             S, K, keep_only_valid_steps, is_model_output=True, device=logits.device
+         )
+-        logits = logits.reshape(B, card, -1)
++        # gather whole card rows: indexing the card-major layout has a sort-based backward that was
++        # half of a small LM's training step. Same values and gradients.
++        logits = logits.permute(0, 2, 3, 1).reshape(B, K * S, card)
+         # we append the special token as the last index of our flattened z tensor
+-        logits = torch.cat([logits, torch.zeros_like(logits[:, :, :1]) + special_token], dim=-1)  # [B, card, K x S]
+-        values = logits[:, :, indexes.view(-1)]
+-        values = values.view(B, card, K, indexes.shape[-1])
++        logits = torch.cat([logits, logits.new_full((B, 1, card), special_token)], dim=1)  # [B, K x S + 1, card]
++        values = logits.index_select(1, indexes.view(-1))
++        values = values.view(B, K, indexes.shape[-1], card).permute(0, 3, 1, 2)  # [B, card, K, T]
+         return values, indexes, mask
+ 
+ 

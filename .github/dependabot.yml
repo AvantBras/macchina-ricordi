@@ -1,0 +1,59 @@
+# Dependabot version updates — kept intentionally light.
+#
+# This file only controls *version* updates (new releases).
+# *Security* updates (CVE-driven PRs) are a separate GitHub feature:
+# enable them at Settings → Code security → Dependabot security updates.
+# Those open automatically the moment a vulnerability is filed against any
+# pinned dependency — no schedule, highest-priority supply chain defence.
+#
+# Supply chain threat model covered here:
+#  - Compromised maintainer release: security updates (above) catch CVEs fast.
+#  - Stale deps as soft targets: weekly version bumps keep the window small.
+#  - Dependency confusion / unusual version jumps: grouped PRs make each bump
+#    visible as a reviewable diff rather than a silent lock-file change.
+#  - Compromised GitHub Actions (GhostAction-style injection, 2025): the
+#    github-actions entry below auto-patches action pins when new versions drop.
+
+version: 2
+updates:
+  # ── Root Python project ────────────────────────────────────────────────────
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    # All updates batched into a single PR — one review, not ten.
+    groups:
+      python-root:
+        patterns: ["*"]
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: "deps"
+
+  # ── MusicGen runtime (separate venv / pyproject) ───────────────────────────
+  - package-ecosystem: "pip"
+    directory: "/musicgen"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    groups:
+      python-musicgen:
+        patterns: ["*"]
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: "deps(musicgen)"
+
+  # ── GitHub Actions ─────────────────────────────────────────────────────────
+  # Monthly cadence — actions are less volatile than Python dependencies.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    groups:
+      actions:
+        patterns: ["*"]
+    open-pull-requests-limit: 1
+    commit-message:
+      prefix: "ci"

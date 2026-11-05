@@ -1,0 +1,69 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Tests (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          version: "0.9.5"
+          enable-cache: true
+      - name: Install audio system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends ffmpeg libsndfile1
+      - name: Install base package and development tools only
+        run: uv sync --locked --extra dev --python "${{ matrix.python }}"
+      - name: Run tests
+        run: uv run --no-sync --python "${{ matrix.python }}" pytest
+
+  checks:
+    name: Lint, lockfiles and distributions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.11"
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          version: "0.9.5"
+          enable-cache: true
+      - name: Check both lockfiles without installing the GPU runtime
+        run: |
+          uv lock --check
+          uv lock --project musicgen --check
+      - name: Install base package and development tools only
+        run: uv sync --locked --extra dev
+      - name: Lint and formatting
+        run: |
+          uv run --no-sync ruff check .
+          uv run --no-sync ruff format --check .
+      # Building archives checks packaging, not standalone wheel support.
+      # The supported installation remains an editable source checkout.
+      - name: Build source and wheel archives
+        run: uv build

@@ -1,0 +1,70 @@
+diff --git a/config/model/encodec/encodec_micro_nq8_s1280.yaml b/config/model/encodec/encodec_micro_nq8_s1280.yaml
+new file mode 100644
+index 0000000..0c8dfa7
+--- /dev/null
++++ b/config/model/encodec/encodec_micro_nq8_s1280.yaml
+@@ -0,0 +1,20 @@
++# @package __global__
++# 25 Hz frame-rate EnCodec for fast autoregressive generation (macchina_ricordi).
++#
++# Halves the LM step count vs encodec_large_nq4_s640 (50 Hz) at the same
++# bitrate: 25 Hz x 8 codebooks x 11 bits = 2200 bps. The MusicGen delay
++# pattern absorbs the extra codebooks (adds K-1 = 7 steps per clip).
++# n_filters 48: smaller than the official 64 -- this codec is meant to be
++# trained on a narrow personal corpus (~10 h), not general music.
++
++defaults:
++  - encodec/default
++
++seanet:
++  ratios: [8, 8, 5, 4]  # hop 1280 @ 32 kHz -> 25 Hz
++  n_filters: 48
++
++rvq:
++  bins: 2048
++  n_q: 8
++  q_dropout: false
+diff --git a/config/model/encodec/encodec_micro_nq8_s2560.yaml b/config/model/encodec/encodec_micro_nq8_s2560.yaml
+new file mode 100644
+index 0000000..8662ec7
+--- /dev/null
++++ b/config/model/encodec/encodec_micro_nq8_s2560.yaml
+@@ -0,0 +1,18 @@
++# @package __global__
++# 12.5 Hz frame-rate EnCodec -- the aggressive variant (macchina_ricordi).
++#
++# Quarter of the LM steps of the 50 Hz official codec, at half the bitrate
++# (12.5 Hz x 8 codebooks x 11 bits = 1100 bps). Expect audible quality loss
++# on dense/noisy material; try after the 25 Hz variant validates.
++
++defaults:
++  - encodec/default
++
++seanet:
++  ratios: [8, 8, 8, 5]  # hop 2560 @ 32 kHz -> 12.5 Hz
++  n_filters: 48
++
++rvq:
++  bins: 2048
++  n_q: 8
++  q_dropout: false
+diff --git a/config/solver/compression/encodec_micro_32khz_lowfps.yaml b/config/solver/compression/encodec_micro_32khz_lowfps.yaml
+new file mode 100644
+index 0000000..6858cd9
+--- /dev/null
++++ b/config/solver/compression/encodec_micro_32khz_lowfps.yaml
+@@ -0,0 +1,14 @@
++# @package __global__
++# Compression solver for the macchina_ricordi low-frame-rate personal codec.
++# Pick the model via a model override, e.g.:
++#   dora run solver=compression/encodec_micro_32khz_lowfps \
++#     model=encodec/encodec_micro_nq8_s1280 dset=audio/macchina_ricordi_micro_uncond ...
++
++defaults:
++  - compression/default
++  - /model: encodec/encodec_micro_nq8_s1280
++  - override /dset: audio/default
++  - _self_
++
++channels: 1
++sample_rate: 32000

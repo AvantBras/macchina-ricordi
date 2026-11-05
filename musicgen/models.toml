@@ -1,0 +1,75 @@
+# What a model is called and what has been measured about it.
+#
+# One [models.<sig>] table per model that has something worth saying. Facts training
+# already records (shape, dataset, epochs, parents, checkpoints) are read from
+# .dora/xps/<sig>/ and do not belong here. See docs/glossary.md and `model --help`.
+#
+#   name      the model's short name, usable anywhere a model is expected (`model name <ref> <name>`)
+#   title     a longer description
+#   notes     free text
+#   measured  behaviour measured in a study: clean_share (share of candidate takes with no
+#             silence), top_k_cliff (top_k at or below which silence spikes)
+#   study     architecture recorded by the author's historical model study;
+#             `epochs` is the epoch that study played, not the run's total
+
+schema = "macchina_ricordi.models.v1"
+
+[models.73e1a314]
+title = "rabit-macron EP40"
+measured = { clean_share = 0.751 }
+study = { dim = 768, layers = 16, segment_duration = 15.0, epochs = 40, warm_started = true }
+
+[models.8aa68bbe]
+title = "rabit-macron perturbed EP70"
+measured = { clean_share = 0.949, top_k_cliff = 25 }
+study = { dim = 768, layers = 16, segment_duration = 15.0, epochs = 70, warm_started = true }
+
+[models.17087d6a]
+title = "50 Hz deep"
+measured = { clean_share = 0.047 }
+study = { dim = 768, layers = 16, segment_duration = 10.0, epochs = 50, warm_started = false }
+
+[models.d371db2c]
+title = "blancbek wide-shallow"
+measured = { clean_share = 0.572 }
+study = { dim = 2048, layers = 2, segment_duration = 15.0, epochs = 30, warm_started = false }
+
+[models.ae5a7a93]
+title = "reshape-mid"
+measured = { clean_share = 0.58 }
+study = { dim = 1024, layers = 8, segment_duration = 15.0, epochs = 30, warm_started = false }
+
+[models.f05eba09]
+title = "25 Hz deep"
+measured = { clean_share = 0.256 }
+study = { dim = 768, layers = 16, segment_duration = 10.0, epochs = 50, warm_started = false }
+
+[models.4ae63477]
+title = "midwife wide-shallow"
+measured = { clean_share = 0.991, top_k_cliff = 25 }
+study = { dim = 2048, layers = 2, segment_duration = 15.0, epochs = 50, warm_started = true }
+
+[models.fd5e1bb0]
+title = "reshape-deep 30ep"
+measured = { clean_share = 0.96 }
+study = { dim = 768, layers = 16, segment_duration = 15.0, epochs = 30, warm_started = false }
+
+[models.d0972708]
+title = "warm-start 20ep"
+measured = { clean_share = 0.969 }
+study = { dim = 768, layers = 16, segment_duration = 15.0, epochs = 20, warm_started = true }
+
+[models.d51cbade]
+title = "fiveway perturbed"
+measured = { clean_share = 0.947 }
+study = { dim = 768, layers = 16, segment_duration = 15.0, epochs = 30, warm_started = true }
+
+[models.e1d39c30]
+title = "warm-start 10ep"
+measured = { clean_share = 0.936 }
+study = { dim = 768, layers = 16, segment_duration = 15.0, epochs = 10, warm_started = true }
+
+[models.7c7eea98]
+title = "narrow-deep"
+measured = { clean_share = 0.981 }
+study = { dim = 512, layers = 16, segment_duration = 15.0, epochs = 30, warm_started = true }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>macchina_ricordi catalogue</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23141a3a'/%3E%3Cpath d='M14 6v20M18 6v20' stroke='%23e0137a' stroke-width='1.2'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="masthead">
+  <a class="brand" href="#/">
+    <svg class="brand-mark" viewBox="0 0 20 28" aria-hidden="true"><path d="M8 2v24M12 2v24"/></svg>
+    <span>macchina_ricordi</span>
+  </a>
+  <nav class="nav">
+    <a href="#/" data-nav="catalogue">Catalogue</a>
+    <a href="#/table" data-nav="table">Index</a>
+    <a href="#/experiments" data-nav="experiments">Expériences</a>
+    <a href="#/stage" data-nav="stage">Scène</a>
+    <a href="#/listen" data-nav="listen">Écoute</a>
+    <a href="#/corpus" data-nav="corpus">Corpus</a>
+    <a href="#/train" data-nav="train">Atelier</a>
+    <a href="#/derive" data-nav="derive">Greffe</a>
+    <a href="#/house" data-nav="house">Réserve</a>
+  </nav>
+  <div class="mast-tools">
+    <span class="compare-tray" id="compare-tray" hidden></span>
+    <button class="ghost" id="refresh" title="Rescan .dora/xps and artifacts">Rescan</button>
+  </div>
+</header>
+<main id="view" aria-live="polite"></main>
+<footer class="colophon">served from this checkout · writes only when asked: the ledger, blind A/B verdicts, stream launches and their controls, corpora and weights, merged and perturbed checkpoints, training launches, housekeeping</footer>
+<div class="player" id="player" hidden>
+  <button class="player-toggle" id="player-toggle" aria-label="Play or pause"></button>
+  <div class="player-meta">
+    <div class="player-title" id="player-title"></div>
+    <div class="player-bar" id="player-bar"><div class="player-fill" id="player-fill"></div></div>
+  </div>
+  <div class="player-time" id="player-time">0:00</div>
+</div>
+<script src="/static/covers.js"></script>
+<script src="/static/app.js"></script>
+<script src="/static/ledger.js"></script>
+<script src="/static/listen.js"></script>
+<script src="/static/train.js"></script>
+<script src="/static/house.js"></script>
+<script src="/static/corpus.js"></script>
+<script src="/static/derive.js"></script>
+<script src="/static/stage.js"></script>
+</body>
+</html>

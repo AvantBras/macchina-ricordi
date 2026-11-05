@@ -1,0 +1,99 @@
+diff --git a/audiocraft/utils/cache.py b/audiocraft/utils/cache.py
+index 6ba017a..60e41b6 100644
+--- a/audiocraft/utils/cache.py
++++ b/audiocraft/utils/cache.py
+@@ -279,7 +279,8 @@ class CachedBatchLoader:
+                 items = items[start: start + self.batch_size]
+                 assert len(items) == self.batch_size
+                 entries = []
+-                entries = [torch.load(item.open(mode), 'cpu') for item in items]  # type: ignore
++                # entries pickle AudioInfo objects, which torch>=2.6 refuses under its weights_only default
++                entries = [torch.load(item.open(mode), 'cpu', weights_only=False) for item in items]  # type: ignore
+                 transposed = zip(*entries)
+                 out = []
+                 for part in transposed:
+@@ -287,8 +288,7 @@ class CachedBatchLoader:
+                     if isinstance(part[0], torch.Tensor):
+                         out.append(torch.stack(part))
+                     else:
+-                        assert isinstance(part, torch.Tensor)
+-                        out.append(part)
++                        out.append(list(part))  # the infos of the batch, as CachedBatchWriter.save got them
+                 return out
+         except Exception:
+             logger.error("Error when reading zip path %s", zip_path)
+@@ -322,3 +322,50 @@ class CachedBatchLoader:
+                 if batch is None:
+                     return
+                 yield batch
++
++
++class TokenPoolLoader:
++    """Loader for a token pool: crops encoded once, then drawn again epoch after epoch.
++
++    The pool folder holds ``tokens.npy`` (int16 codes ``[P, K, T]``, memory-mapped), ``infos.pt`` (one
++    ``AudioInfo`` per crop, without tokens) and ``order.npy`` (crop indices, ``batch_size`` per update, epochs back to
++    back). It yields what `CachedBatchLoader` yields, so the solver's cached path consumes it unchanged, but stores
++    each crop once instead of once per epoch. Pools are written by macchina_ricordi's ``scripts/build_token_pool.py``.
++    """
++
++    def __init__(self, pool_folder: Path, batch_size: int, num_workers: int = 10, min_length: int = 1):
++        import numpy as np
++
++        # shortcut: one process only; under DDP each rank would need its own slice of an update's crops
++        assert flashy.distrib.world_size() == 1, "TokenPoolLoader does not support distributed training yet"
++        self.batch_size = batch_size
++        self.updates = min_length
++        self.tokens = np.load(pool_folder / "tokens.npy", mmap_mode="r")
++        self.order = np.load(pool_folder / "order.npy", mmap_mode="r")
++        self.infos = torch.load(pool_folder / "infos.pt", "cpu", weights_only=False)
++        self._current_epoch: tp.Optional[int] = None
++        self.sampler = None  # for compatibility with the regular DataLoader
++
++    def __len__(self):
++        return self.updates
++
++    def start_epoch(self, epoch: int):
++        self._current_epoch = epoch
++
++    def __iter__(self):
++        import copy
++        import numpy as np
++
++        assert self._current_epoch is not None
++        start = (self._current_epoch - 1) * self.updates * self.batch_size
++        if start + self.updates * self.batch_size > len(self.order):
++            built = len(self.order) // (self.updates * self.batch_size)
++            raise RuntimeError(f"The token pool holds batches for {built} epochs, not epoch {self._current_epoch}.")
++        for update in range(self.updates):
++            first = start + update * self.batch_size
++            infos = []
++            for index in self.order[first:first + self.batch_size]:
++                info = copy.copy(self.infos[index])
++                info.audio_tokens = torch.from_numpy(np.array(self.tokens[index]))
++                infos.append(info)
++            yield [infos]
+diff --git a/audiocraft/solvers/musicgen.py b/audiocraft/solvers/musicgen.py
+index 72b6533..8af5351 100644
+--- a/audiocraft/solvers/musicgen.py
++++ b/audiocraft/solvers/musicgen.py
+@@ -23,7 +23,7 @@ from ..data.audio_dataset import AudioDataset
+ from ..data.music_dataset import MusicDataset, MusicInfo, AudioInfo
+ from ..data.audio_utils import normalize_audio
+ from ..modules.conditioners import JointEmbedCondition, SegmentWithAttributes, WavCondition
+-from ..utils.cache import CachedBatchWriter, CachedBatchLoader
++from ..utils.cache import CachedBatchWriter, CachedBatchLoader, TokenPoolLoader
+ from ..utils.samples.manager import SampleManager
+ from ..utils.utils import get_dataset_from_loader, is_jsonable, warn_once, model_hash
+ 
+@@ -55,7 +55,9 @@ class MusicGenSolver(base.StandardSolver):
+                     self.logger.warning("Multiple shard cache, best_metric_name will be set to None.")
+                     self._best_metric_name = None
+             else:
+-                self._cached_batch_loader = CachedBatchLoader(
++                # a token pool stores each crop once; the original cache stores every epoch's batches
++                loader_cls = TokenPoolLoader if (Path(cfg.cache.path) / "tokens.npy").exists() else CachedBatchLoader
++                self._cached_batch_loader = loader_cls(
+                     Path(cfg.cache.path), cfg.dataset.batch_size, cfg.dataset.num_workers,
+                     min_length=self.cfg.optim.updates_per_epoch or 1)
+                 self.dataloaders['original_train'] = self.dataloaders['train']

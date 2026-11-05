@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools==84.1.0", "wheel==0.48.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "macchina_ricordi"
+version = "0.1.0"
+description = "Arrhythmic percussive reward tools for MusicGen experiments"
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+  "numpy>=1.26,<3.0",
+  "librosa>=0.10.1,<0.12.0",
+  "matplotlib>=3.7,<4.0",
+  "pandas>=2.2,<3.0",
+  "safetensors>=0.4.5,<1.0",
+  "PyYAML>=6.0,<7.0",
+]
+
+[project.scripts]
+ricordi = "macchina_ricordi.cli:main"
+
+[project.optional-dependencies]
+dev = [
+  "pytest==9.1.1",
+  "ruff>=0.6,<0.18",
+]
+semantic-listening = [
+  "msclap==1.3.4",
+]
+captioner-witness = [
+  "accelerate>=0.26",
+  "bitsandbytes>=0.49.2",
+  "torch",
+  # >=5.0.0: first release with AudioFlamingo3ForConditionalGeneration
+  "transformers>=5.0.0",
+]
+instrument = [
+  "sounddevice>=0.4",
+  "soundfile>=0.12",
+]
+
+[tool.uv]
+# msclap 1.3.4 declares transformers<5 but only imports stable APIs
+# (AutoModel, AutoTokenizer, GPT2LMHeadModel); verified working on 5.x.
+override-dependencies = ["transformers>=5.0.0"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["macchina_ricordi*"]
+
+[tool.setuptools.package-data]
+"macchina_ricordi.gui" = ["static/*.html", "static/*.css", "static/*.js", "static/fonts/*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = [".venv", ".venv-musicgen", ".audiocraft", ".dora", "musicgen", "research"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E501"]

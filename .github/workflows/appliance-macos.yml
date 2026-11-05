@@ -1,0 +1,135 @@
+name: appliance-macos
+
+# Builds the player as a macOS app on Apple Silicon and tests it end to end.
+# Nobody's trained weights are involved: the test model is made on Linux with the
+# real architecture, random language-model weights and Meta's real EnCodec
+# decoder, so the Mac exercises the same graphs and costs a real model does.
+# macOS minutes count ten times against a private repository's allowance, so the
+# model is made on Linux and the Mac job does only what needs a Mac.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "appliance/**"
+      - "packaging/appliance/**"
+      - "macchina_ricordi/instrument/controls.py"
+      - "tests/test_appliance*.py"
+      - ".github/workflows/appliance-macos.yml"
+  pull_request:
+    paths:
+      - "appliance/**"
+      - "packaging/appliance/**"
+      - "macchina_ricordi/instrument/controls.py"
+      - "tests/test_appliance*.py"
+      - ".github/workflows/appliance-macos.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # The release whose .nrbox files are built into the Mac app. It is as visible as the
+  # repository: in a public one, anyone can download them. Without it, the app ships empty.
+  MODELS_RELEASE: appliance-models
+
+concurrency:
+  group: appliance-macos-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-model:
+    name: Make a test model (Linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: Install torch (CPU), onnx and transformers
+        run: |
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+          python -m pip install onnx onnxruntime numpy transformers
+      - name: Make the model
+        run: PYTHONPATH=. python packaging/appliance/make_test_box.py --out test-model/test-random.nrbox
+      - uses: actions/upload-artifact@v7
+        with:
+          name: test-model
+          path: test-model/
+          retention-days: 3
+
+  macos:
+    name: Build and test on Apple Silicon
+    needs: test-model
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: The machine
+        run: |
+          sw_vers
+          uname -m
+          sysctl -n machdep.cpu.brand_string hw.ncpu hw.memsize
+      - name: Install the runtime and PyInstaller (no torch)
+        run: python -m pip install onnxruntime numpy sounddevice pyinstaller pytest
+      - name: Unit tests on arm64
+        run: PYTHONPATH=. python -m pytest tests/test_appliance.py tests/test_appliance_desktop.py -q -p no:warnings
+      - uses: actions/download-artifact@v8
+        with:
+          name: test-model
+          path: test-model
+      - name: Models to build in (trusted main builds only)
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p models
+          if gh release view "$MODELS_RELEASE" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release download "$MODELS_RELEASE" --repo "$GITHUB_REPOSITORY" --pattern '*.nrbox' --dir models
+          fi
+          ls -la models
+      - name: Build the app
+        run: |
+          mkdir -p models
+          set -- models/*.nrbox
+          [ -e "$1" ] || set --
+          PYTHONPATH=. python packaging/appliance/build.py --boxes "$@"
+      - name: Check the signature and bundle
+        run: |
+          codesign --verify --deep --strict --verbose=2 dist/appliance/macchina-ricordi.app
+          plutil -p dist/appliance/macchina-ricordi.app/Contents/Info.plist
+          file dist/appliance/macchina-ricordi.app/Contents/MacOS/macchina-ricordi
+          du -sh dist/appliance/macchina-ricordi.app dist/appliance/macchina-ricordi-macos-*.zip
+      - name: Speed on Apple Silicon
+        env:
+          MACCHINA_RICORDI_CONSOLE: "1"
+        run: |
+          APP=dist/appliance/macchina-ricordi.app/Contents/MacOS/macchina-ricordi
+          for threads in 1 2 4; do
+            echo "== $threads thread(s), default"
+            $APP render test-model/test-random.nrbox --out /tmp/render-$threads.wav --seconds 24 --threads $threads
+          done
+          echo "== --fast, default threads"
+          $APP render test-model/test-random.nrbox --out /tmp/render-fast.wav --seconds 24 --fast
+      - name: Use it the way a person would
+        run: |
+          names=()
+          for f in models/*.nrbox; do [ -e "$f" ] && names+=("$(basename "$f" .nrbox)"); done
+          python packaging/appliance/smoke_test.py --app dist/appliance/macchina-ricordi.app \
+            --box test-model/test-random.nrbox ${names[@]:+--expect-builtin "${names[@]}"}
+      - uses: actions/upload-artifact@v7
+        with:
+          name: macchina-ricordi-macos-arm64
+          path: dist/appliance/macchina-ricordi-macos-arm64.zip
+          retention-days: 30
+      - name: Keep the app's log if anything failed
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: macos-log
+          path: ~/Music/macchina-ricordi/macchina-ricordi.log
+          if-no-files-found: ignore

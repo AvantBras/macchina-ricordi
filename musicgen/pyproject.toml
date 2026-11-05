@@ -1,0 +1,245 @@
+[project]
+name = "macchina_ricordi_musicgen_runtime"
+version = "0.1.0"
+description = "Dedicated uv-managed MusicGen runtime for macchina_ricordi training and micro inference"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "av==18.1.0",
+  "demucs==4.1.0",
+  "dora-search==0.1.13",
+  "einops==0.8.2",
+  "encodec==0.1.1",
+  "flashy==0.0.2",
+  "gradio==6.30.0",
+  "huggingface_hub==2.2.0",
+  "hydra-core==1.3.8",
+  "hydra_colorlog==1.2.0",
+  "julius==0.2.8",
+  "librosa==0.11.0",
+  "num2words==0.5.14",
+  "numpy==2.4.6",
+  "protobuf==7.36.2",
+  "sentencepiece==0.2.2",
+  "safetensors==0.8.0",
+  "spacy==3.8.16",
+  "torch==2.14.1",
+  "torchaudio==2.11.0",
+  "torchmetrics==1.9.0",
+  "torchtext==0.18.0",
+  "torchvision==0.29.1",
+  "tqdm==4.70.1",
+  "transformers==5.19.0",
+  "xformers==0.0.35",
+]
+
+[tool.uv]
+package = false
+# Restrict resolution to Linux only — the PyTorch CUDA wheel index has no
+# Windows or macOS builds for the cu126 flavour, so cross-platform resolution
+# would always fail. This project targets Linux (including WSL2).
+environments = ["sys_platform == 'linux'"]
+
+[[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu126" }]
+torchaudio = [{ index = "pytorch-cu126" }]
+torchvision = [{ index = "pytorch-cu126" }]
+
+[tool.macchina_ricordi.runtime]
+project_environment = ".venv-musicgen"
+checkout_dir = ".audiocraft"
+dora_dir = ".dora"
+python_request = "3.11"
+
+[tool.macchina_ricordi.audiocraft]
+repo_url = "https://github.com/aaronabebe/audiocraft"
+commit_sha = "1ca32f28d2d6c223b4e2335042ac558c308f2ea2"
+
+[tool.macchina_ricordi.defaults]
+recipe = "reshape-nano"
+valid_fraction = 0.1
+split_seed = 42
+
+# Codecs a recipe can name with `codec = "<name>"`.
+[tool.macchina_ricordi.codecs]
+encodec_32khz = "//pretrained/facebook/encodec_32khz"
+# The personal 25 Hz codec (XP 899cb23e, epoch-16 snapshot): half the AR steps of
+# encodec_32khz at the same 2200 bps. Machine-local: configure an existing compatible
+# checkpoint before selecting lowfps_25hz. Experimental codec configs are in
+# patches/audiocraft-lowfps-codec-configs.patch.
+lowfps_25hz = "/path/to/macchina-ricordi/.dora/xps/899cb23e/checkpoint_ep16_snapshot.th"
+
+# ── Recipes ──────────────────────────────────────────────────────────────────
+# A recipe is how to train: the model's shape, codec, loader and schedule, as Dora
+# overrides. It never names data: `train run --workspace-dir` decides that.
+# `extends` starts from another recipe; a line replaces the inherited line with the
+# same key. `abstract = true` recipes exist only to be extended. See docs/glossary.md.
+
+[tool.macchina_ricordi.recipes.base]
+abstract = true
+codec = "encodec_32khz"
+overrides = [
+  "solver=musicgen/musicgen_base_32khz",
+  "conditioner=none",
+  "model/lm/model_scale=micro",
+  "dataset.batch_size=3",
+  "dataset.segment_duration=10",
+  "dataset.num_workers=2",
+  "dataset.valid.num_samples=50",
+  "generate.every=10000",
+  "evaluate.every=10000",
+  "checkpoint.save_every=5",
+  "checkpoint.keep_last=5",
+  "optim.optimizer=adamw",
+  "optim.lr=1e-4",
+  "schedule.cosine.lr_min_ratio=0.05",
+  "optim.adam.weight_decay=0.01",
+  "optim.epochs=5",
+]
+
+# Depth-heavy shapes need gradient checkpointing and layer_scale.
+[tool.macchina_ricordi.recipes.deep-stack]
+abstract = true
+extends = "base"
+overrides = ["transformer_lm.checkpointing=torch", "transformer_lm.layer_scale=1e-4"]
+
+# The ~7.5M-parameter family: batch 4, keep 20 epoch checkpoints. Gradient checkpointing off since 2026-10-24:
+# bitwise-identical gradients, ~15% faster, under 1 GB. Batch 8 is not slower per audio-second; its epochs are longer
+# because an epoch is a fixed 2000 updates in that benchmark configuration.
+[tool.macchina_ricordi.recipes.nano-family]
+abstract = true
+extends = "deep-stack"
+overrides = ["dataset.batch_size=4", "checkpoint.keep_last=20", "transformer_lm.checkpointing=none"]
+
+# The original wide-shallow micro: model_scale=micro is 2048d/2L, trained on 15 s segments.
+[tool.macchina_ricordi.recipes.micro-unconditional]
+extends = "base"
+overrides = ["dataset.segment_duration=15"]
+
+# --- Stage 1 depth-over-width ladder (head_dim=64, D=10, n_q=4) ---
+# Only the SHAPE lines differ across this ladder.
+
+# wide-shallow, head_dim fixed to 64 (was 1024): the fastest-inference baseline
+[tool.macchina_ricordi.recipes.reshape-shallow]
+extends = "base"
+overrides = ["transformer_lm.dim=2048", "transformer_lm.num_heads=32", "transformer_lm.num_layers=2"]
+
+# balanced: small's width (1024) at 1/3 its depth (8 layers)
+[tool.macchina_ricordi.recipes.reshape-mid]
+extends = "base"
+overrides = ["transformer_lm.dim=1024", "transformer_lm.num_heads=16", "transformer_lm.num_layers=8"]
+
+# depth-heavy: 768 x 16 layers
+[tool.macchina_ricordi.recipes.reshape-deep]
+extends = "deep-stack"
+overrides = [
+  "transformer_lm.dim=768",
+  "transformer_lm.num_heads=12",
+  "transformer_lm.num_layers=16",
+  "dataset.batch_size=2",
+]
+
+# depth-heavy, half width: 512 x 16, ~59M params (47% of reshape-deep)
+[tool.macchina_ricordi.recipes.reshape-deep-small]
+extends = "deep-stack"
+overrides = ["transformer_lm.dim=512", "transformer_lm.num_heads=8", "transformer_lm.num_layers=16"]
+
+# 384 x 13, ~29.3M. "the patient staircase": structure-biased mini, most of the depth, smaller palette
+[tool.macchina_ricordi.recipes.reshape-mini]
+extends = "base"
+overrides = [
+  "transformer_lm.dim=384",
+  "transformer_lm.num_heads=6",
+  "transformer_lm.num_layers=13",
+  "dataset.batch_size=4",
+]
+
+# 512 x 7, ~30.4M. "the open mouth": palette-biased mini, thinner temporal memory
+[tool.macchina_ricordi.recipes.reshape-mini-wide]
+extends = "base"
+overrides = [
+  "transformer_lm.dim=512",
+  "transformer_lm.num_heads=8",
+  "transformer_lm.num_layers=7",
+  "dataset.batch_size=4",
+]
+
+# 320 x 16, ~24.9M. "the narrow cathedral": the full 16-layer hierarchy at minimal palette
+[tool.macchina_ricordi.recipes.reshape-mini-deep]
+extends = "deep-stack"
+overrides = [
+  "transformer_lm.dim=320",
+  "transformer_lm.num_heads=5",
+  "transformer_lm.num_layers=16",
+  "dataset.batch_size=4",
+]
+
+# 192 x 10, ~7.6M. "the hummingbird": for tiny single-artist corpora
+[tool.macchina_ricordi.recipes.reshape-nano]
+extends = "nano-family"
+overrides = ["transformer_lm.dim=192", "transformer_lm.num_heads=3", "transformer_lm.num_layers=10"]
+
+# 256 x 4, ~7.4M. "the plaza": width-first, palette over hierarchy, the memorize-leaning end
+[tool.macchina_ricordi.recipes.reshape-nano-wide]
+extends = "nano-family"
+overrides = ["transformer_lm.dim=256", "transformer_lm.num_heads=4", "transformer_lm.num_layers=4"]
+
+# 128 x 28, ~7.7M. "the needle": depth-first, hierarchy over palette, the generalize-leaning end
+[tool.macchina_ricordi.recipes.reshape-nano-deep]
+extends = "nano-family"
+overrides = ["transformer_lm.dim=128", "transformer_lm.num_heads=2", "transformer_lm.num_layers=28"]
+
+# 192 x 15, half-MLP, ~7.6M. "the thin rungs": isolates depth vs MLP capacity at the hummingbird's width
+[tool.macchina_ricordi.recipes.reshape-nano-slim]
+extends = "nano-family"
+overrides = [
+  "transformer_lm.dim=192",
+  "transformer_lm.num_heads=3",
+  "transformer_lm.num_layers=15",
+  "transformer_lm.hidden_scale=2",
+]
+
+# The ~3.7M-parameter family: half the nano family's size, same schedule, batch and checkpoints.
+[tool.macchina_ricordi.recipes.pico-family]
+abstract = true
+extends = "nano-family"
+
+# 128 x 8, ~3.7M: half the nano family's parameters (the embeddings and output heads are most of what is left)
+[tool.macchina_ricordi.recipes.reshape-pico]
+extends = "pico-family"
+overrides = ["transformer_lm.dim=128", "transformer_lm.num_heads=2", "transformer_lm.num_layers=8"]
+
+# 192 x 2 with a 2x MLP, ~3.7M: the plaza at pico size. Width is mostly embedding here, so the budget buys two thin blocks
+[tool.macchina_ricordi.recipes.reshape-pico-wide]
+extends = "pico-family"
+overrides = [
+  "transformer_lm.dim=192",
+  "transformer_lm.num_heads=3",
+  "transformer_lm.num_layers=2",
+  "transformer_lm.hidden_scale=2",
+]
+
+# 96 x 19, ~3.7M: the needle at pico size. 64-wide heads need 52 layers for this budget, past nano-deep's 28; so 2 x 48
+[tool.macchina_ricordi.recipes.reshape-pico-deep]
+extends = "pico-family"
+overrides = ["transformer_lm.dim=96", "transformer_lm.num_heads=2", "transformer_lm.num_layers=19"]
+
+# 128 x 12 with a 2x MLP, ~3.7M: the thin rungs at pico size, 1.5x the base's depth at the same body parameters
+[tool.macchina_ricordi.recipes.reshape-pico-slim]
+extends = "pico-family"
+overrides = [
+  "transformer_lm.dim=128",
+  "transformer_lm.num_heads=2",
+  "transformer_lm.num_layers=12",
+  "transformer_lm.hidden_scale=2",
+]
+
+# reshape-deep on the personal 25 Hz codec: n_q=8 codebooks, so the LM grows 4 extra tiny heads
+[tool.macchina_ricordi.recipes.reshape-deep-25hz]
+extends = "reshape-deep"
+codec = "lowfps_25hz"
+overrides = ["transformer_lm.n_q=8", "codebooks_pattern.delay.delays=[0,1,2,3,4,5,6,7]"]

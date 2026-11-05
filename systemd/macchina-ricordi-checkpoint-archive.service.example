@@ -1,0 +1,7 @@
+[Unit]
+Description=Archive matching macchina_ricordi MusicGen checkpoints
+
+[Service]
+Type=oneshot
+EnvironmentFile=%h/.config/macchina_ricordi/checkpoint-archive.env
+ExecStart=/bin/sh -c 'cd "$MACCHINA_RICORDI_REPO" && exec "$MACCHINA_RICORDI_PYTHON" -m macchina_ricordi.cli tidy archive --dora-dir "$MACCHINA_RICORDI_DORA" --destination "$MACCHINA_RICORDI_ARCHIVE" --min-age "$MACCHINA_RICORDI_MIN_AGE" --checkpoint latest --require-metadata --commit'

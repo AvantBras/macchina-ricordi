@@ -1,0 +1,10 @@
+[Unit]
+Description=Periodically archive macchina_ricordi MusicGen checkpoints
+
+[Timer]
+OnCalendar=*:0/15
+Persistent=true
+Unit=macchina-ricordi-checkpoint-archive.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,14 @@
+diff --git a/audiocraft/utils/checkpoint.py b/audiocraft/utils/checkpoint.py
+index f6f8718..4bfc3d9 100644
+--- a/audiocraft/utils/checkpoint.py
++++ b/audiocraft/utils/checkpoint.py
+@@ -90,7 +90,8 @@ def load_checkpoint(checkpoint_path: Path, is_sharded: bool = False) -> tp.Any:
+         rank0_checkpoint_path = checkpoint_path.parent / checkpoint_name(use_fsdp=False)
+         if rank0_checkpoint_path.exists():
+             check_sharded_checkpoint(checkpoint_path, rank0_checkpoint_path)
+-    state = torch.load(checkpoint_path, 'cpu')
++    # These local Dora checkpoints contain trusted full training state, not just tensor weights.
++    state = torch.load(checkpoint_path, 'cpu', weights_only=False)
+     logger.info("Checkpoint loaded from %s", checkpoint_path)
+     return state
+ 

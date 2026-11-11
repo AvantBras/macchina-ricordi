@@ -16,7 +16,8 @@ concurrency:
 jobs:
   tests:
     name: Tests (Python ${{ matrix.python }})
-    runs-on: ubuntu-latest
+    # Keep system audio packages on a stable LTS image rather than a moving release.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -42,7 +43,8 @@ jobs:
 
   checks:
     name: Lint, lockfiles and distributions
-    runs-on: ubuntu-latest
+    # Keep system audio packages on a stable LTS image rather than a moving release.
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7.0.1

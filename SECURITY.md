@@ -34,18 +34,16 @@ For captioner commands, pass `--no-captioner-trust-remote-code` to disallow that
 models that require custom code may then refuse to load. This does not sandbox model inference or
 its dependencies. Plain DSP listening and the starter-model downloader do not enable captioners.
 
-## Known runtime dependency limitation
+## Runtime dependency maintenance
 
-The current `musicgen/uv.lock` still contains **Pillow 12.3.0**, for which the dependency audit
-reports image-decoder/encoder vulnerabilities fixed in Pillow 13.0.0. The pinned Gradio 6.30.0
-requires `pillow<13.0`, so the patched version cannot currently be selected within the declared
-runtime constraints. The latest checked Gradio 6.31.0 has the same upper bound.
+The Pillow findings affecting the former MusicGen runtime lock were resolved by removing the unused
+Gradio demo dependency and locking **Pillow 13.0.0**. The runtime does not install AudioCraft's demo
+dependencies. Reintroducing them requires checking their constraints against the patched runtime.
 
-This is an unresolved dependency finding, not evidence that an exploit is reachable through the
-starter-model workflow. Do not process untrusted images in that runtime or treat it as a hardened
-service. Resolving it requires a compatible Gradio update or a separately tested change to the demo
-dependencies; overriding the constraint without testing is not a fix. Recheck this note whenever the
-runtime dependencies change.
+A lockfile check verifies dependency resolution, not GPU compatibility. Runtime dependency updates
+also need a runtime health check, generation with a trained model, and a small real training run on
+the target GPU. Recheck dependency advisories whenever the runtime lock changes; a clean audit is
+not a guarantee that the runtime is a sandbox or that untrusted input is safe.
 
 ## Sharing reports and reporting problems
 

@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = "==3.11.*"
 resolution-markers = [
     "sys_platform == 'linux'",
@@ -37,8 +37,8 @@ name = "anyio"
 version = "4.14.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "idna", marker = "sys_platform == 'linux'" },
-    { name = "typing-extensions", marker = "sys_platform == 'linux'" },
+    { name = "idna" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/61/cc/a381afa6efea9f496eff839d4a6a1aed3bfafc7b3ab4b0d1b243a12573dd/anyio-4.14.2.tar.gz", hash = "sha256:cfa139f3ed1a23ee8f88a145ddb5ac7605b8bbfd8592baacd7ce3d8bb4313c7f", size = 260176, upload-time = "2026-07-12T20:29:07.082Z" }
 wheels = [
@@ -72,7 +72,7 @@ name = "blis"
 version = "1.3.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy", marker = "sys_platform == 'linux'" },
+    { name = "numpy" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/d0/d0/d8cc8c9a4488a787e7fa430f6055e5bd1ddb22c340a751d9e901b82e2efe/blis-1.3.3.tar.gz", hash = "sha256:034d4560ff3cc43e8aa37e188451b0440e3261d989bb8a42ceee865607715ecd", size = 2644873, upload-time = "2025-11-17T12:28:30.511Z" }
 wheels = [
@@ -105,7 +105,7 @@ name = "cffi"
 version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "pycparser", marker = "implementation_name != 'PyPy' and sys_platform == 'linux'" },
+    { name = "pycparser", marker = "implementation_name != 'PyPy'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/eb/56/b1ba7935a17738ae8453301356628e8147c79dbb825bcbc73dc7401f9846/cffi-2.0.0.tar.gz", hash = "sha256:44d1b5909021139fe36001ae048dbdde8214afa20200eda0f64c068cac5d5529", size = 523588, upload-time = "2025-09-08T23:24:04.541Z" }
 wheels = [
@@ -178,11 +178,11 @@ wheels = [
 
 [[package]]
 name = "confection"
-version = "1.3.3"
+version = "1.3.4"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ca/65/efd0fe8a936fc8ca2978cb7b82581fb20d901c6039e746a808f746b7647b/confection-1.3.3.tar.gz", hash = "sha256:f0f6810d567ff73993fe74d218ca5e1ffb6a44fb03f391257fc5d033546cbfaa", size = 54895, upload-time = "2026-03-24T18:45:24.331Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/3e/b0/f43e446048750a34149532084abea73a79ec693e277e6db45da8662b754f/confection-1.3.4.tar.gz", hash = "sha256:560aebbeabaaeee369c54e21afc97953165b2166909ea81e14e341838f4b260d", size = 55094, upload-time = "2026-10-26T14:26:36.509Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8d/e4/d66708bdf0d92fb4d49b22cdff4b10cec38aca5dcd7e81d909bb55c65cd7/confection-1.3.3-py3-none-any.whl", hash = "sha256:b9fef9ee84b237ef4611ec3eb5797b70e13063e6310ad9f15536373f5e313c82", size = 35902, upload-time = "2026-03-24T18:45:22.664Z" },
+    { url = "https://files.pythonhosted.org/packages/1d/65/411a5a4a83c98c907c5a76906fad35c6841e7ca9370165a625696ffdc71a/confection-1.3.4-py3-none-any.whl", hash = "sha256:6c2e1ae87de7d989a79bdb62977eb9c43c28fb3371f3462492667eb0520e6796", size = 35961, upload-time = "2026-10-26T14:26:35.243Z" },
 ]
 
 [[package]]
@@ -190,7 +190,7 @@ name = "cuda-bindings"
 version = "12.9.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "cuda-pathfinder", marker = "sys_platform == 'linux'" },
+    { name = "cuda-pathfinder" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1f/a5/e9d37c10f6c27c9c65d53c6cd6d9763e1df99c004780585fc2ad9041fbe3/cuda_bindings-12.9.6-cp311-cp311-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:2662f59db67d9aeaf8959c593c91f600792c2970cf02cae2814387fc687b115a", size = 7090971, upload-time = "2026-03-11T14:47:29.526Z" },
@@ -215,34 +215,34 @@ wheels = [
 
 [package.optional-dependencies]
 cublas = [
-    { name = "nvidia-cublas-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-cublas-cu12" },
 ]
 cudart = [
-    { name = "nvidia-cuda-runtime-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-cuda-runtime-cu12" },
 ]
 cufft = [
-    { name = "nvidia-cufft-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-cufft-cu12" },
 ]
 cufile = [
-    { name = "nvidia-cufile-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-cufile-cu12" },
 ]
 cupti = [
-    { name = "nvidia-cuda-cupti-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-cuda-cupti-cu12" },
 ]
 curand = [
-    { name = "nvidia-curand-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-curand-cu12" },
 ]
 cusolver = [
-    { name = "nvidia-cusolver-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-cusolver-cu12" },
 ]
 cusparse = [
-    { name = "nvidia-cusparse-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-cusparse-cu12" },
 ]
 nvrtc = [
-    { name = "nvidia-cuda-nvrtc-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-cuda-nvrtc-cu12" },
 ]
 nvtx = [
-    { name = "nvidia-nvtx-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-nvtx-cu12" },
 ]
 
 [[package]]
@@ -271,15 +271,15 @@ name = "demucs"
 version = "4.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "einops", marker = "sys_platform == 'linux'" },
-    { name = "huggingface-hub", marker = "sys_platform == 'linux'" },
-    { name = "julius", marker = "sys_platform == 'linux'" },
-    { name = "lameenc", marker = "sys_platform == 'linux'" },
-    { name = "pyyaml", marker = "sys_platform == 'linux'" },
-    { name = "safetensors", marker = "sys_platform == 'linux'" },
-    { name = "sphn", marker = "sys_platform == 'linux'" },
-    { name = "torch", marker = "sys_platform == 'linux'" },
-    { name = "tqdm", marker = "sys_platform == 'linux'" },
+    { name = "einops" },
+    { name = "huggingface-hub" },
+    { name = "julius" },
+    { name = "lameenc" },
+    { name = "pyyaml" },
+    { name = "safetensors" },
+    { name = "sphn" },
+    { name = "torch" },
+    { name = "tqdm" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/cd/0a/fe873fc9d9576de2b20fd6421857b189dee951b89305977f6c37416a8d42/demucs-4.1.0.tar.gz", hash = "sha256:d94c4f7dac886595b66af405c0fd1756fa00c297183f1cf021fd2eeedeeb67b2", size = 1244351, upload-time = "2026-07-11T14:52:27.43Z" }
 wheels = [
@@ -297,11 +297,11 @@ name = "dora-search"
 version = "0.1.13"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "omegaconf", marker = "sys_platform == 'linux'" },
-    { name = "retrying", marker = "sys_platform == 'linux'" },
-    { name = "submitit", marker = "sys_platform == 'linux'" },
-    { name = "torch", marker = "sys_platform == 'linux'" },
-    { name = "treetable", marker = "sys_platform == 'linux'" },
+    { name = "omegaconf" },
+    { name = "retrying" },
+    { name = "submitit" },
+    { name = "torch" },
+    { name = "treetable" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/19/4e/5e14933be05a5d35769a9fafa30d739092689ecf9e1dcf9a5a3886536e92/dora_search-0.1.13.tar.gz", hash = "sha256:ac490e48706640a2ae08b67b36db18174b969459a13a9831c21423575a194a87", size = 69530, upload-time = "2026-09-09T15:46:14.227Z" }
 wheels = [
@@ -322,10 +322,10 @@ name = "encodec"
 version = "0.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "einops", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "torch", marker = "sys_platform == 'linux'" },
-    { name = "torchaudio", marker = "sys_platform == 'linux'" },
+    { name = "einops" },
+    { name = "numpy" },
+    { name = "torch" },
+    { name = "torchaudio" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/62/59/e47bbd0542d0e6f4ce9983d5eb458a01d4b42c81e5c410cb9e159b1061ae/encodec-0.1.1.tar.gz", hash = "sha256:36dde98ccfe6c51a15576476cadfcb3b35a63507b8b8555abd69889a6fba6772", size = 3736037, upload-time = "2022-10-25T16:13:21.471Z" }
 
@@ -343,10 +343,10 @@ name = "flashy"
 version = "0.0.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorlog", marker = "sys_platform == 'linux'" },
-    { name = "dora-search", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "torch", marker = "sys_platform == 'linux'" },
+    { name = "colorlog" },
+    { name = "dora-search" },
+    { name = "numpy" },
+    { name = "torch" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/32/1b/262b98d72cfafb16e1fbdb4529fd806da9f7975ca67531854ab2a75f7d22/flashy-0.0.2.tar.gz", hash = "sha256:e7f5afc3130d5af5ddbce1d22f4a729f1900055488cb0b531cdbc190dc79e9fd", size = 72442, upload-time = "2023-05-24T19:50:00.86Z" }
 
@@ -385,8 +385,8 @@ name = "httpcore"
 version = "1.0.9"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "certifi", marker = "sys_platform == 'linux'" },
-    { name = "h11", marker = "sys_platform == 'linux'" },
+    { name = "certifi" },
+    { name = "h11" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/06/94/82699a10bca87a5556c9c59b5963f2d039dbd239f25bc2a63907a05a14cb/httpcore-1.0.9.tar.gz", hash = "sha256:6e34463af53fd2ab5d807f399a9b45ea31c3dfa2276f15a2c3f00afff6e176e8", size = 85484, upload-time = "2025-04-24T22:06:22.219Z" }
 wheels = [
@@ -398,8 +398,8 @@ name = "httpcore2"
 version = "2.16.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "h11", marker = "sys_platform == 'linux'" },
-    { name = "truststore", marker = "sys_platform == 'linux'" },
+    { name = "h11" },
+    { name = "truststore" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/c0/61/afa9d6b7452f9eca73f73d45324eb0bb52f098fd5e6049bf6b8263be9b4e/httpcore2-2.16.0.tar.gz", hash = "sha256:c72cd0413563b17e1cd8354677dff887466f8ec2551679759e93126534428643", size = 69886, upload-time = "2026-10-21T07:09:45.31Z" }
 wheels = [
@@ -411,10 +411,10 @@ name = "httpx"
 version = "0.28.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "anyio", marker = "sys_platform == 'linux'" },
-    { name = "certifi", marker = "sys_platform == 'linux'" },
-    { name = "httpcore", marker = "sys_platform == 'linux'" },
-    { name = "idna", marker = "sys_platform == 'linux'" },
+    { name = "anyio" },
+    { name = "certifi" },
+    { name = "httpcore" },
+    { name = "idna" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/b1/df/48c586a5fe32a0f01324ee087459e112ebb7224f646c0b5023f5e79e9956/httpx-0.28.1.tar.gz", hash = "sha256:75e98c5f16b0f35b567856f597f06ff2270a374470a5c2392242528e3e3e42fc", size = 141406, upload-time = "2024-12-06T15:37:23.222Z" }
 wheels = [
@@ -426,11 +426,11 @@ name = "httpx2"
 version = "2.16.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "anyio", marker = "sys_platform == 'linux'" },
-    { name = "httpcore2", marker = "sys_platform == 'linux'" },
-    { name = "idna", marker = "sys_platform == 'linux'" },
-    { name = "truststore", marker = "sys_platform == 'linux'" },
-    { name = "typing-extensions", marker = "sys_platform == 'linux'" },
+    { name = "anyio" },
+    { name = "httpcore2" },
+    { name = "idna" },
+    { name = "truststore" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/43/73/5ca2cedf5e4e50423d1c258877865a6b62793633b561c58499f8aeb33b7e/httpx2-2.16.0.tar.gz", hash = "sha256:0d54c98128e8f2ff7fbbde0fca8c359e5f032edeaaaac443cdb7f31f685bcd7f", size = 103116, upload-time = "2026-10-21T07:09:46.348Z" }
 wheels = [
@@ -439,22 +439,22 @@ wheels = [
 
 [[package]]
 name = "huggingface-hub"
-version = "2.2.0"
+version = "2.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "click", marker = "sys_platform == 'linux'" },
-    { name = "filelock", marker = "sys_platform == 'linux'" },
-    { name = "fsspec", marker = "sys_platform == 'linux'" },
-    { name = "hf-xet", marker = "(platform_machine == 'AMD64' and sys_platform == 'linux') or (platform_machine == 'ARM64' and sys_platform == 'linux') or (platform_machine == 'aarch64' and sys_platform == 'linux') or (platform_machine == 'amd64' and sys_platform == 'linux') or (platform_machine == 'arm64' and sys_platform == 'linux') or (platform_machine == 'x86_64' and sys_platform == 'linux')" },
-    { name = "httpx2", marker = "sys_platform == 'linux'" },
-    { name = "packaging", marker = "sys_platform == 'linux'" },
-    { name = "pyyaml", marker = "sys_platform == 'linux'" },
-    { name = "tqdm", marker = "sys_platform == 'linux'" },
-    { name = "typing-extensions", marker = "sys_platform == 'linux'" },
+    { name = "click" },
+    { name = "filelock" },
+    { name = "fsspec" },
+    { name = "hf-xet", marker = "platform_machine == 'AMD64' or platform_machine == 'ARM64' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'arm64' or platform_machine == 'x86_64'" },
+    { name = "httpx2" },
+    { name = "packaging" },
+    { name = "pyyaml" },
+    { name = "tqdm" },
+    { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/12/47/6858d63643e66fb4f6585c3cfd4029c0b2bc1ae21688cee9b3335f20a10d/huggingface_hub-2.2.0.tar.gz", hash = "sha256:5d1b47537394e4215cb858aa12fd493d0f7ef7f58990f5dcd24bc173107b2871", size = 1041026, upload-time = "2026-10-08T15:30:59.971Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b5/3b/2fcef1eabe52aec90fc8cd253cc154da1d02a446d7bbcdec59b4a51d4be7/huggingface_hub-2.4.0.tar.gz", hash = "sha256:13a6158b9e3393d9d3f248ce99074d50c2a0a1449fb9d8e2f710751e2084c188", size = 1066194, upload-time = "2026-10-29T15:30:12.321Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/eb/b0/0f7b430fd100b3a3b037fdbb314878200241082e607b3383c63d91a13a72/huggingface_hub-2.2.0-py3-none-any.whl", hash = "sha256:1667f145dc56dc210d60966069397df9ecfca9607a5d43db88b308c89dae56b3", size = 839884, upload-time = "2026-10-08T15:30:57.914Z" },
+    { url = "https://files.pythonhosted.org/packages/d4/55/ff47f1b082ecf5f43f4bc1e3b932d68eead171dabbbd1a92666c686301d7/huggingface_hub-2.4.0-py3-none-any.whl", hash = "sha256:42ecfd93ede47bdd333daebbf66a32d7bfe2e18752754fe4d2d4f98a0179d801", size = 857021, upload-time = "2026-10-29T15:30:10.421Z" },
 ]
 
 [[package]]
@@ -462,8 +462,8 @@ name = "hydra-colorlog"
 version = "1.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorlog", marker = "sys_platform == 'linux'" },
-    { name = "hydra-core", marker = "sys_platform == 'linux'" },
+    { name = "colorlog" },
+    { name = "hydra-core" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/2b/fc/ab5ca078d5184ae3280d5654734860198c643cd2caaaaaece63283d9f76d/hydra-colorlog-1.2.0.tar.gz", hash = "sha256:d44f85008fabd2448c7e3b496c31b44d7610560f6fff74f3673afaa949870899", size = 3060, upload-time = "2022-05-17T22:16:25.407Z" }
 wheels = [
@@ -475,9 +475,9 @@ name = "hydra-core"
 version = "1.3.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "antlr4-python3-runtime", marker = "sys_platform == 'linux'" },
-    { name = "omegaconf", marker = "sys_platform == 'linux'" },
-    { name = "packaging", marker = "sys_platform == 'linux'" },
+    { name = "antlr4-python3-runtime" },
+    { name = "omegaconf" },
+    { name = "packaging" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/7c/1d/e1ad315ca93f1b090b0782942535fea8344e8b2d749c92117b2bf45f4407/hydra_core-1.3.8.tar.gz", hash = "sha256:18d5dfb841734a936507e75e7b8390b406ed22494f7fb8b4b7b7c122102de3d5", size = 3278858, upload-time = "2026-10-25T13:42:22.491Z" }
 wheels = [
@@ -498,7 +498,7 @@ name = "jinja2"
 version = "3.1.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "markupsafe", marker = "sys_platform == 'linux'" },
+    { name = "markupsafe" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/df/bf/f7da0350254c0ed7c72f3e33cef02e048281fec7ecec5f032d4aac52226b/jinja2-3.1.6.tar.gz", hash = "sha256:0137fb05990d35f1275a587e9aee6d56da821fc83491a0fb838183be43f66d6d", size = 245115, upload-time = "2025-03-05T20:05:02.478Z" }
 wheels = [
@@ -519,7 +519,7 @@ name = "julius"
 version = "0.2.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "torch", marker = "sys_platform == 'linux'" },
+    { name = "torch" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/1d/c6/5c2aea2b11ead1680bb5b17c996def31f8ccade471cada37cdb93855e06f/julius-0.2.8.tar.gz", hash = "sha256:d691e651200930affea4f6c849c26e95fec846087281ae3d1a7757eac90253d5", size = 48081, upload-time = "2026-06-03T16:05:34.52Z" }
 wheels = [
@@ -545,7 +545,7 @@ name = "lazy-loader"
 version = "0.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "packaging", marker = "sys_platform == 'linux'" },
+    { name = "packaging" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/49/ac/21a1f8aa3777f5658576777ea76bfb124b702c520bbe90edf4ae9915eafa/lazy_loader-0.5.tar.gz", hash = "sha256:717f9179a0dbed357012ddad50a5ad3d5e4d9a0b8712680d4e687f5e6e6ed9b3", size = 15294, upload-time = "2026-03-06T15:45:09.054Z" }
 wheels = [
@@ -557,19 +557,19 @@ name = "librosa"
 version = "0.11.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "audioread", marker = "sys_platform == 'linux'" },
-    { name = "decorator", marker = "sys_platform == 'linux'" },
-    { name = "joblib", marker = "sys_platform == 'linux'" },
-    { name = "lazy-loader", marker = "sys_platform == 'linux'" },
-    { name = "msgpack", marker = "sys_platform == 'linux'" },
-    { name = "numba", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "pooch", marker = "sys_platform == 'linux'" },
-    { name = "scikit-learn", marker = "sys_platform == 'linux'" },
-    { name = "scipy", marker = "sys_platform == 'linux'" },
-    { name = "soundfile", marker = "sys_platform == 'linux'" },
-    { name = "soxr", marker = "sys_platform == 'linux'" },
-    { name = "typing-extensions", marker = "sys_platform == 'linux'" },
+    { name = "audioread" },
+    { name = "decorator" },
+    { name = "joblib" },
+    { name = "lazy-loader" },
+    { name = "msgpack" },
+    { name = "numba" },
+    { name = "numpy" },
+    { name = "pooch" },
+    { name = "scikit-learn" },
+    { name = "scipy" },
+    { name = "soundfile" },
+    { name = "soxr" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/64/36/360b5aafa0238e29758729e9486c6ed92a6f37fa403b7875e06c115cdf4a/librosa-0.11.0.tar.gz", hash = "sha256:f5ed951ca189b375bbe2e33b2abd7e040ceeee302b9bbaeeffdfddb8d0ace908", size = 327001, upload-time = "2025-03-11T15:09:54.884Z" }
 wheels = [
@@ -581,8 +581,8 @@ name = "lightning-utilities"
 version = "0.15.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "packaging", marker = "sys_platform == 'linux'" },
-    { name = "typing-extensions", marker = "sys_platform == 'linux'" },
+    { name = "packaging" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/f1/45/7fa8f56b17dc0f0a41ec70dd307ecd6787254483549843bef4c30ab5adce/lightning_utilities-0.15.3.tar.gz", hash = "sha256:792ae0204c79f6859721ac7f386c237a33b0ed06ba775009cb894e010a842033", size = 33553, upload-time = "2026-02-22T14:48:53.348Z" }
 wheels = [
@@ -604,31 +604,31 @@ name = "macchina-ricordi-musicgen-runtime"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "av", marker = "sys_platform == 'linux'" },
-    { name = "demucs", marker = "sys_platform == 'linux'" },
-    { name = "dora-search", marker = "sys_platform == 'linux'" },
-    { name = "einops", marker = "sys_platform == 'linux'" },
-    { name = "encodec", marker = "sys_platform == 'linux'" },
-    { name = "flashy", marker = "sys_platform == 'linux'" },
-    { name = "huggingface-hub", marker = "sys_platform == 'linux'" },
-    { name = "hydra-colorlog", marker = "sys_platform == 'linux'" },
-    { name = "hydra-core", marker = "sys_platform == 'linux'" },
-    { name = "julius", marker = "sys_platform == 'linux'" },
-    { name = "librosa", marker = "sys_platform == 'linux'" },
-    { name = "num2words", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "protobuf", marker = "sys_platform == 'linux'" },
-    { name = "safetensors", marker = "sys_platform == 'linux'" },
-    { name = "sentencepiece", marker = "sys_platform == 'linux'" },
-    { name = "spacy", marker = "sys_platform == 'linux'" },
-    { name = "torch", marker = "sys_platform == 'linux'" },
-    { name = "torchaudio", marker = "sys_platform == 'linux'" },
-    { name = "torchmetrics", marker = "sys_platform == 'linux'" },
-    { name = "torchtext", marker = "sys_platform == 'linux'" },
-    { name = "torchvision", marker = "sys_platform == 'linux'" },
-    { name = "tqdm", marker = "sys_platform == 'linux'" },
-    { name = "transformers", marker = "sys_platform == 'linux'" },
-    { name = "xformers", marker = "sys_platform == 'linux'" },
+    { name = "av" },
+    { name = "demucs" },
+    { name = "dora-search" },
+    { name = "einops" },
+    { name = "encodec" },
+    { name = "flashy" },
+    { name = "huggingface-hub" },
+    { name = "hydra-colorlog" },
+    { name = "hydra-core" },
+    { name = "julius" },
+    { name = "librosa" },
+    { name = "num2words" },
+    { name = "numpy" },
+    { name = "protobuf" },
+    { name = "safetensors" },
+    { name = "sentencepiece" },
+    { name = "spacy" },
+    { name = "torch" },
+    { name = "torchaudio" },
+    { name = "torchmetrics" },
+    { name = "torchtext" },
+    { name = "torchvision" },
+    { name = "tqdm" },
+    { name = "transformers" },
+    { name = "xformers" },
 ]
 
 [package.metadata]
@@ -639,7 +639,7 @@ requires-dist = [
     { name = "einops", specifier = "==0.8.2" },
     { name = "encodec", specifier = "==0.1.1" },
     { name = "flashy", specifier = "==0.0.2" },
-    { name = "huggingface-hub", specifier = "==2.2.0" },
+    { name = "huggingface-hub", specifier = "==2.4.0" },
     { name = "hydra-colorlog", specifier = "==1.2.0" },
     { name = "hydra-core", specifier = "==1.3.8" },
     { name = "julius", specifier = "==0.2.8" },
@@ -648,15 +648,15 @@ requires-dist = [
     { name = "numpy", specifier = "==2.4.6" },
     { name = "protobuf", specifier = "==7.36.2" },
     { name = "safetensors", specifier = "==0.8.0" },
-    { name = "sentencepiece", specifier = "==0.2.2" },
-    { name = "spacy", specifier = "==3.8.16" },
+    { name = "sentencepiece", specifier = "==0.2.3" },
+    { name = "spacy", specifier = "==3.8.18" },
     { name = "torch", specifier = "==2.14.1", index = "https://download.pytorch.org/whl/cu126" },
     { name = "torchaudio", specifier = "==2.11.0", index = "https://download.pytorch.org/whl/cu126" },
     { name = "torchmetrics", specifier = "==1.9.0" },
     { name = "torchtext", specifier = "==0.18.0" },
     { name = "torchvision", specifier = "==0.29.1", index = "https://download.pytorch.org/whl/cu126" },
     { name = "tqdm", specifier = "==4.70.1" },
-    { name = "transformers", specifier = "==5.19.0" },
+    { name = "transformers", specifier = "==5.22.2" },
     { name = "xformers", specifier = "==0.0.35" },
 ]
 
@@ -665,7 +665,7 @@ name = "markdown-it-py"
 version = "4.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "mdurl", marker = "sys_platform == 'linux'" },
+    { name = "mdurl" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/5b/f5/4ec618ed16cc4f8fb3b701563655a69816155e79e24a17b651541804721d/markdown_it_py-4.0.0.tar.gz", hash = "sha256:cb0a2b4aa34f932c007117b194e945bd74e0ec24133ceb5bac59009cda1cb9f3", size = 73070, upload-time = "2025-08-11T12:57:52.854Z" }
 wheels = [
@@ -744,7 +744,7 @@ name = "num2words"
 version = "0.5.14"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "docopt", marker = "sys_platform == 'linux'" },
+    { name = "docopt" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/f6/58/ad645bd38b4b648eb2fc2ba1b909398e54eb0cbb6a7dbd2b4953e38c9621/num2words-0.5.14.tar.gz", hash = "sha256:b066ec18e56b6616a3b38086b5747daafbaa8868b226a36127e0451c0cf379c6", size = 218213, upload-time = "2024-12-17T20:17:10.191Z" }
 wheels = [
@@ -756,8 +756,8 @@ name = "numba"
 version = "0.65.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "llvmlite", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
+    { name = "llvmlite" },
+    { name = "numpy" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/49/61/7299643b9c18d669e04be7c5bcb64d985070d07553274817b45b049e7bfe/numba-0.65.0.tar.gz", hash = "sha256:edad0d9f6682e93624c00125a471ae4df186175d71fd604c983c377cdc03e68b", size = 2764131, upload-time = "2026-04-01T03:52:01.946Z" }
 wheels = [
@@ -824,7 +824,7 @@ name = "nvidia-cudnn-cu12"
 version = "9.10.2.21"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-cublas-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-cublas-cu12" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/fa/41/e79269ce215c857c935fd86bcfe91a451a584dfc27f1e068f568b9ad1ab7/nvidia_cudnn_cu12-9.10.2.21-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:c9132cc3f8958447b4910a1720036d9eff5928cc3179b0a51fb6d167c6cc87d8", size = 705026878, upload-time = "2025-06-06T21:52:51.348Z" },
@@ -836,7 +836,7 @@ name = "nvidia-cufft-cu12"
 version = "11.3.0.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-nvjitlink-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-nvjitlink-cu12" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1f/37/c50d2b2f2c07e146776389e3080f4faf70bcc4fa6e19d65bb54ca174ebc3/nvidia_cufft_cu12-11.3.0.4-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:d16079550df460376455cba121db6564089176d9bac9e4f360493ca4741b22a6", size = 200164144, upload-time = "2024-11-20T17:40:58.288Z" },
@@ -870,9 +870,9 @@ name = "nvidia-cusolver-cu12"
 version = "11.7.1.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-cublas-cu12", marker = "sys_platform == 'linux'" },
-    { name = "nvidia-cusparse-cu12", marker = "sys_platform == 'linux'" },
-    { name = "nvidia-nvjitlink-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-cublas-cu12" },
+    { name = "nvidia-cusparse-cu12" },
+    { name = "nvidia-nvjitlink-cu12" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/93/17/dbe1aa865e4fdc7b6d4d0dd308fdd5aaab60f939abfc0ea1954eac4fb113/nvidia_cusolver_cu12-11.7.1.2-py3-none-manylinux2014_aarch64.whl", hash = "sha256:0ce237ef60acde1efc457335a2ddadfd7610b892d94efee7b776c64bb1cac9e0", size = 157833628, upload-time = "2024-10-01T17:05:05.591Z" },
@@ -886,7 +886,7 @@ name = "nvidia-cusparse-cu12"
 version = "12.5.4.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "nvidia-nvjitlink-cu12", marker = "sys_platform == 'linux'" },
+    { name = "nvidia-nvjitlink-cu12" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/eb/eb/6681efd0aa7df96b4f8067b3ce7246833dd36830bb4cec8896182773db7d/nvidia_cusparse_cu12-12.5.4.2-py3-none-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:d25b62fb18751758fe3c93a4a08eff08effedfe4edf1c6bb5afd0890fe88f887", size = 216451147, upload-time = "2024-11-20T17:44:18.055Z" },
@@ -947,8 +947,8 @@ name = "omegaconf"
 version = "2.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "antlr4-python3-runtime", marker = "sys_platform == 'linux'" },
-    { name = "pyyaml", marker = "sys_platform == 'linux'" },
+    { name = "antlr4-python3-runtime" },
+    { name = "pyyaml" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/09/48/6388f1bb9da707110532cb70ec4d2822858ddfb44f1cdf1233c20a80ea4b/omegaconf-2.3.0.tar.gz", hash = "sha256:d5d4b6d29955cc50ad50c46dc269bcd92c6e00f5f90d23ab5fee7bfca4ba4cc7", size = 3298120, upload-time = "2022-12-08T20:59:22.753Z" }
 wheels = [
@@ -992,9 +992,9 @@ name = "pooch"
 version = "1.9.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "packaging", marker = "sys_platform == 'linux'" },
-    { name = "platformdirs", marker = "sys_platform == 'linux'" },
-    { name = "requests", marker = "sys_platform == 'linux'" },
+    { name = "packaging" },
+    { name = "platformdirs" },
+    { name = "requests" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/83/43/85ef45e8b36c6a48546af7b266592dc32d7f67837a6514d111bced6d7d75/pooch-1.9.0.tar.gz", hash = "sha256:de46729579b9857ffd3e741987a2f6d5e0e03219892c167c6578c0091fb511ed", size = 61788, upload-time = "2026-01-30T19:15:09.649Z" }
 wheels = [
@@ -1006,8 +1006,8 @@ name = "preshed"
 version = "3.0.13"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "cymem", marker = "sys_platform == 'linux'" },
-    { name = "murmurhash", marker = "sys_platform == 'linux'" },
+    { name = "cymem" },
+    { name = "murmurhash" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/43/75/fe6b7bbd0dea530a001b0e24c331b21a0be2786e402abf3c57f5dce43d4b/preshed-3.0.13.tar.gz", hash = "sha256:d75f718bbfd97e992f7827e0fa7faf6a91bdd9c922d5baa4b50d62731396cb89", size = 18338, upload-time = "2026-03-23T08:57:31.378Z" }
 wheels = [
@@ -1043,10 +1043,10 @@ name = "pydantic"
 version = "2.13.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "annotated-types", marker = "sys_platform == 'linux'" },
-    { name = "pydantic-core", marker = "sys_platform == 'linux'" },
-    { name = "typing-extensions", marker = "sys_platform == 'linux'" },
-    { name = "typing-inspection", marker = "sys_platform == 'linux'" },
+    { name = "annotated-types" },
+    { name = "pydantic-core" },
+    { name = "typing-extensions" },
+    { name = "typing-inspection" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/09/e5/06d23afac9973109d1e3c8ad38e1547a12e860610e327c05ee686827dc37/pydantic-2.13.2.tar.gz", hash = "sha256:b418196607e61081c3226dcd4f0672f2a194828abb9109e9cfb84026564df2d1", size = 843836, upload-time = "2026-04-17T09:31:59.636Z" }
 wheels = [
@@ -1058,7 +1058,7 @@ name = "pydantic-core"
 version = "2.46.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "typing-extensions", marker = "sys_platform == 'linux'" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/43/bb/4742f05b739b2478459bb16fa8470549518c802e06ddcf3f106c5081315e/pydantic_core-2.46.2.tar.gz", hash = "sha256:37bb079f9ee3f1a519392b73fda2a96379b31f2013c6b467fe693e7f2987f596", size = 471269, upload-time = "2026-04-17T09:10:07.017Z" }
 wheels = [
@@ -1126,10 +1126,10 @@ name = "requests"
 version = "2.33.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "certifi", marker = "sys_platform == 'linux'" },
-    { name = "charset-normalizer", marker = "sys_platform == 'linux'" },
-    { name = "idna", marker = "sys_platform == 'linux'" },
-    { name = "urllib3", marker = "sys_platform == 'linux'" },
+    { name = "certifi" },
+    { name = "charset-normalizer" },
+    { name = "idna" },
+    { name = "urllib3" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/5f/a4/98b9c7c6428a668bf7e42ebb7c79d576a1c3c1e3ae2d47e674b468388871/requests-2.33.1.tar.gz", hash = "sha256:18817f8c57c6263968bc123d237e3b8b08ac046f5456bd1e307ee8f4250d3517", size = 134120, upload-time = "2026-03-30T16:09:15.531Z" }
 wheels = [
@@ -1150,8 +1150,8 @@ name = "rich"
 version = "15.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "markdown-it-py", marker = "sys_platform == 'linux'" },
-    { name = "pygments", marker = "sys_platform == 'linux'" },
+    { name = "markdown-it-py" },
+    { name = "pygments" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/c0/8f/0722ca900cc807c13a6a0c696dacf35430f72e0ec571c4275d2371fca3e9/rich-15.0.0.tar.gz", hash = "sha256:edd07a4824c6b40189fb7ac9bc4c52536e9780fbbfbddf6f1e2502c31b068c36", size = 230680, upload-time = "2026-04-12T08:24:00.75Z" }
 wheels = [
@@ -1182,10 +1182,10 @@ name = "scikit-learn"
 version = "1.8.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "joblib", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "scipy", marker = "sys_platform == 'linux'" },
-    { name = "threadpoolctl", marker = "sys_platform == 'linux'" },
+    { name = "joblib" },
+    { name = "numpy" },
+    { name = "scipy" },
+    { name = "threadpoolctl" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/0e/d4/40988bf3b8e34feec1d0e6a051446b1f66225f8529b9309becaeef62b6c4/scikit_learn-1.8.0.tar.gz", hash = "sha256:9bccbb3b40e3de10351f8f5068e105d0f4083b1a65fa07b6634fbc401a6287fd", size = 7335585, upload-time = "2025-12-10T07:08:53.618Z" }
 wheels = [
@@ -1198,7 +1198,7 @@ name = "scipy"
 version = "1.17.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy", marker = "sys_platform == 'linux'" },
+    { name = "numpy" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/7a/97/5a3609c4f8d58b039179648e62dd220f89864f56f7357f5d4f45c29eb2cc/scipy-1.17.1.tar.gz", hash = "sha256:95d8e012d8cb8816c226aef832200b1d45109ed4464303e997c5b13122b297c0", size = 30573822, upload-time = "2026-02-23T00:26:24.851Z" }
 wheels = [
@@ -1210,12 +1210,12 @@ wheels = [
 
 [[package]]
 name = "sentencepiece"
-version = "0.2.2"
+version = "0.2.3"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/cc/33/ea3cb3839607eb175da835244a798f797f478c5ddf0e8ecdf57ea85a4c70/sentencepiece-0.2.2.tar.gz", hash = "sha256:3d2b5e824b5622038dc7b490897efe05ebbbb9e7350fc142f3ecc8789ef9bdf6", size = 8218435, upload-time = "2026-07-12T08:39:34.701Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/54/83/0664683546ffca8e36653d39d6217c361d931953f40ce28210b56927a9b6/sentencepiece-0.2.3.tar.gz", hash = "sha256:21618ad31f0453a1ebf5ec58defed99758d54af0b670546ecac639ddd8b86fbd", size = 3751846, upload-time = "2026-11-05T05:38:22.108Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f3/3a/7839048997c7bc0c34c57526f539f835e20c7a57dc2a99f99579b11cdbef/sentencepiece-0.2.2-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:0e2aae42960392d6dcb9a72d8e1e65a97294c965071b43c7b3429a42f350250e", size = 1324282, upload-time = "2026-07-12T08:38:20.342Z" },
-    { url = "https://files.pythonhosted.org/packages/06/5f/9117bf854aef817ad0d0ee9310eed0308a7e529e7eaf2e80ad9cd281ef82/sentencepiece-0.2.2-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:1416b92f2f010333786fe6306ed2631121d5ea492219b0841e967b6765e64107", size = 1394242, upload-time = "2026-07-12T08:38:22.976Z" },
+    { url = "https://files.pythonhosted.org/packages/c2/4f/6db415ccb1d9508becda7e56092f63f24972dea0605fe94a8c1d9d4b5075/sentencepiece-0.2.3-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:855b047e02fb9c7aae2f673f5c1adbd42a4a0e8ce77e5090d14ff26f9282749d", size = 1626383, upload-time = "2026-11-05T05:35:50.398Z" },
+    { url = "https://files.pythonhosted.org/packages/0f/90/7a01161697ff2a6dc1968a735b7ea7fefd7eb09827d90242923ff76e33fd/sentencepiece-0.2.3-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:141dc0bef1e28a5cf7e41c8354ad6cc14525758278045286dcb5429b9906d39f", size = 1713961, upload-time = "2026-11-05T05:35:54.276Z" },
 ]
 
 [[package]]
@@ -1241,11 +1241,16 @@ name = "smart-open"
 version = "7.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "wrapt", marker = "sys_platform == 'linux'" },
+    { name = "wrapt" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/14/33/7a00ac9b4a63afb4279b99a766f6cbe56c443526dcbf5db97b219e21fde9/smart_open-7.6.0.tar.gz", hash = "sha256:44717f46b5ff276fac03b88e5d13d1c416f064f3b7b081381b0fa8889004bd7e", size = 54548, upload-time = "2026-04-13T09:48:04.347Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/de/bc/2761410d0541e975f384bc89f062d716bf119499dd097eb1af33dcd3b1c0/smart_open-7.6.0-py3-none-any.whl", hash = "sha256:2a78f454610a826aa688065b54b4a0a9b12a5599fa61d5190e9bac2df5e5f53f", size = 64591, upload-time = "2026-04-13T09:48:02.687Z" },
+]
+
+[package.optional-dependencies]
+http = [
+    { name = "requests" },
 ]
 
 [[package]]
@@ -1253,8 +1258,8 @@ name = "soundfile"
 version = "0.13.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "cffi", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
+    { name = "cffi" },
+    { name = "numpy" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/e1/41/9b873a8c055582859b239be17902a85339bec6a30ad162f98c9b0288a2cc/soundfile-0.13.1.tar.gz", hash = "sha256:b2c68dab1e30297317080a5b43df57e302584c49e2942defdde0acccc53f0e5b", size = 46156, upload-time = "2025-01-25T09:17:04.831Z" }
 wheels = [
@@ -1268,7 +1273,7 @@ name = "soxr"
 version = "1.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy", marker = "sys_platform == 'linux'" },
+    { name = "numpy" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/42/7e/f4b461944662ad75036df65277d6130f9411002bfb79e9df7dff40a31db9/soxr-1.0.0.tar.gz", hash = "sha256:e07ee6c1d659bc6957034f4800c60cb8b98de798823e34d2a2bba1caa85a4509", size = 171415, upload-time = "2025-09-07T13:22:21.317Z" }
 wheels = [
@@ -1280,36 +1285,36 @@ wheels = [
 
 [[package]]
 name = "spacy"
-version = "3.8.16"
+version = "3.8.18"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "catalogue", marker = "sys_platform == 'linux'" },
-    { name = "click", marker = "sys_platform == 'linux'" },
-    { name = "confection", marker = "sys_platform == 'linux'" },
-    { name = "cymem", marker = "sys_platform == 'linux'" },
-    { name = "jinja2", marker = "sys_platform == 'linux'" },
-    { name = "murmurhash", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "packaging", marker = "sys_platform == 'linux'" },
-    { name = "preshed", marker = "sys_platform == 'linux'" },
-    { name = "pydantic", marker = "sys_platform == 'linux'" },
-    { name = "requests", marker = "sys_platform == 'linux'" },
-    { name = "setuptools", marker = "sys_platform == 'linux'" },
-    { name = "spacy-legacy", marker = "sys_platform == 'linux'" },
-    { name = "spacy-loggers", marker = "sys_platform == 'linux'" },
-    { name = "srsly", marker = "sys_platform == 'linux'" },
-    { name = "thinc", marker = "sys_platform == 'linux'" },
-    { name = "tqdm", marker = "sys_platform == 'linux'" },
-    { name = "typer", marker = "sys_platform == 'linux'" },
-    { name = "wasabi", marker = "sys_platform == 'linux'" },
-    { name = "weasel", marker = "sys_platform == 'linux'" },
+    { name = "catalogue" },
+    { name = "click" },
+    { name = "confection" },
+    { name = "cymem" },
+    { name = "jinja2" },
+    { name = "murmurhash" },
+    { name = "numpy" },
+    { name = "packaging" },
+    { name = "preshed" },
+    { name = "pydantic" },
+    { name = "requests" },
+    { name = "setuptools" },
+    { name = "spacy-legacy" },
+    { name = "spacy-loggers" },
+    { name = "srsly" },
+    { name = "thinc" },
+    { name = "tqdm" },
+    { name = "typer" },
+    { name = "wasabi" },
+    { name = "weasel" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/69/5d/b0b4cd2f6e8a0470e50f7f0cfc1cea6e2f25572e97fb5d404c7941d5e88a/spacy-3.8.16.tar.gz", hash = "sha256:a3d19da23637cc396b42d22fc33852680f675d8ddcb847d3e2a0d094712d1794", size = 1330989, upload-time = "2026-08-24T10:05:57.936Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/01/3a/1805baf651a20b9f2dbc2e76bc9ba085028175a9d104c5e72da514e34c50/spacy-3.8.18.tar.gz", hash = "sha256:cbb0a630b30b2c20f96eefc5c7c65f8b2ca264c943050043db0c9315d1cc876d", size = 1331024, upload-time = "2026-10-26T21:24:01.029Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bb/8d/13ac8597d0907eb306e4afe0214648f72ee3b8643cdb85f79054d73f7400/spacy-3.8.16-cp311-cp311-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:4e91c4f9a320d964a27ffae1b62e37bb6e8c391aa837890a082d82bd9a89ed43", size = 34186254, upload-time = "2026-08-24T10:04:17.688Z" },
-    { url = "https://files.pythonhosted.org/packages/10/3e/39e910b91b9a6cae61dbde9e42196c37388ba4f2d3abb88ebf1e9e4a303e/spacy-3.8.16-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:bc4e59799dcb0eb4823e5946515d3ca0d503ff78ef2502172d4b59ee0fc567ec", size = 34678935, upload-time = "2026-08-24T10:04:21.98Z" },
-    { url = "https://files.pythonhosted.org/packages/00/46/bf8e69d1bcc35a4bd798ad82e2496290aa7f6b98a47cb2c9b1375e04353d/spacy-3.8.16-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:ccd74917536fa82896f31c66db5f230301ec2662b7ad3c0d8c3eb790b0fc6121", size = 34558988, upload-time = "2026-08-24T10:04:26.175Z" },
-    { url = "https://files.pythonhosted.org/packages/7f/44/433cec1610c82f677374a8fc2db3ee2618fd06c16f5bbf13aea6d2796292/spacy-3.8.16-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:e67052bebdeba53847d3d09058f814708d587c4fb2216c65239964a341da2280", size = 35495139, upload-time = "2026-08-24T10:04:30.521Z" },
+    { url = "https://files.pythonhosted.org/packages/a4/70/779bcd03ad58a8554f31dd27bb3165bf72973e08b7ab79d43c0e3af1efae/spacy-3.8.18-cp311-cp311-manylinux_2_24_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:7bdc5e49f4a95a0ad57b5113b3cbb28ff605d66d9df6eb6efb4cd68984f3dfdf", size = 34189271, upload-time = "2026-10-26T21:22:21.954Z" },
+    { url = "https://files.pythonhosted.org/packages/28/76/c668ad579ad595efb1ae220030ac2cfd8583bb637f9484b61670b3dcb177/spacy-3.8.18-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:c076d6caab1aae5b3c0fd5ecba9f1265ad1e1824ced3e0352193ca30994ac115", size = 34680337, upload-time = "2026-10-26T21:22:24.962Z" },
+    { url = "https://files.pythonhosted.org/packages/92/25/ccdc2bfc372f5c9382f7439e1cfed4c34cd101b1f280879c7c024195e60f/spacy-3.8.18-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:defac859f9d2d024aa1ffb7e9d860abf4674f3c276a2e187ce89076cdcab0dc9", size = 34583974, upload-time = "2026-10-26T21:22:27.749Z" },
+    { url = "https://files.pythonhosted.org/packages/f4/12/937e64ed63168a62f1cb234ea72c7178bf9a8027ccfd566b1715539be08f/spacy-3.8.18-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:d18a276f37ac7890bc41dc8c277d63b1638940c3fbf324779d6fdecdb5c944fb", size = 35509698, upload-time = "2026-10-26T21:22:30.44Z" },
 ]
 
 [[package]]
@@ -1344,7 +1349,7 @@ name = "srsly"
 version = "2.5.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "catalogue", marker = "sys_platform == 'linux'" },
+    { name = "catalogue" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/2b/db/f794f219a6c788b881252d2536a8c4a97d2bdaadc690391e1cb53d123d71/srsly-2.5.3.tar.gz", hash = "sha256:08f98dbecbff3a31466c4ae7c833131f59d3655a0ad8ac749e6e2c149e2b0680", size = 490881, upload-time = "2026-03-23T11:56:59.865Z" }
 wheels = [
@@ -1359,8 +1364,8 @@ name = "submitit"
 version = "1.5.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "cloudpickle", marker = "sys_platform == 'linux'" },
-    { name = "typing-extensions", marker = "sys_platform == 'linux'" },
+    { name = "cloudpickle" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/47/86/497018fb3b74e71bef45df82762b176e6b3d159f29941c20d2f141ec4096/submitit-1.5.4.tar.gz", hash = "sha256:7100848bd1cdda79c7196e54ee830793ae75fd7adde0c5bef738d72360a07508", size = 81538, upload-time = "2025-12-17T19:20:03.396Z" }
 wheels = [
@@ -1372,7 +1377,7 @@ name = "sympy"
 version = "1.14.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "mpmath", marker = "sys_platform == 'linux'" },
+    { name = "mpmath" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/83/d3/803453b36afefb7c2bb238361cd4ae6125a569b4db67cd9e79846ba2d68c/sympy-1.14.0.tar.gz", hash = "sha256:d3d3fe8df1e5a0b42f0e7bdf50541697dbe7d23746e894990c030e2b05e72517", size = 7793921, upload-time = "2025-04-27T18:05:01.611Z" }
 wheels = [
@@ -1384,18 +1389,18 @@ name = "thinc"
 version = "8.3.13"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "blis", marker = "sys_platform == 'linux'" },
-    { name = "catalogue", marker = "sys_platform == 'linux'" },
-    { name = "confection", marker = "sys_platform == 'linux'" },
-    { name = "cymem", marker = "sys_platform == 'linux'" },
-    { name = "murmurhash", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "packaging", marker = "sys_platform == 'linux'" },
-    { name = "preshed", marker = "sys_platform == 'linux'" },
-    { name = "pydantic", marker = "sys_platform == 'linux'" },
-    { name = "setuptools", marker = "sys_platform == 'linux'" },
-    { name = "srsly", marker = "sys_platform == 'linux'" },
-    { name = "wasabi", marker = "sys_platform == 'linux'" },
+    { name = "blis" },
+    { name = "catalogue" },
+    { name = "confection" },
+    { name = "cymem" },
+    { name = "murmurhash" },
+    { name = "numpy" },
+    { name = "packaging" },
+    { name = "preshed" },
+    { name = "pydantic" },
+    { name = "setuptools" },
+    { name = "srsly" },
+    { name = "wasabi" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/13/46/76df95f2c327f9a9cef30c1523bf285627897097163584dcf5f77b2ebce2/thinc-8.3.13.tar.gz", hash = "sha256:68e658549fc1eb3ff92aed5147fcbb9c15d6e9cc0e623b4d0998d16522ffb4f9", size = 194640, upload-time = "2026-03-23T07:22:36.41Z" }
 wheels = [
@@ -1419,7 +1424,7 @@ name = "tokenizers"
 version = "0.23.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "huggingface-hub", marker = "sys_platform == 'linux'" },
+    { name = "huggingface-hub" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/e0/7c/2cabb2174e772636683008f2c5621949b645da7d303c596589e84516a184/tokenizers-0.23.3.tar.gz", hash = "sha256:cded33237c77caeef62944d32aa9a7ef42bdce2b3497e18d137e072a8c4be438", size = 385286, upload-time = "2026-10-09T10:16:55.759Z" }
 wheels = [
@@ -1441,21 +1446,21 @@ name = "torch"
 version = "2.14.1+cu126"
 source = { registry = "https://download.pytorch.org/whl/cu126" }
 dependencies = [
-    { name = "cuda-bindings", marker = "sys_platform == 'linux'" },
-    { name = "cuda-toolkit", extra = ["cublas", "cudart", "cufft", "cufile", "cupti", "curand", "cusolver", "cusparse", "nvrtc", "nvtx"], marker = "sys_platform == 'linux'" },
-    { name = "filelock", marker = "sys_platform == 'linux'" },
-    { name = "fsspec", marker = "sys_platform == 'linux'" },
-    { name = "jinja2", marker = "sys_platform == 'linux'" },
-    { name = "networkx", marker = "sys_platform == 'linux'" },
-    { name = "nvidia-cudnn-cu12", marker = "sys_platform == 'linux'" },
-    { name = "nvidia-cusparselt-cu12", marker = "sys_platform == 'linux'" },
-    { name = "nvidia-nccl-cu12", marker = "sys_platform == 'linux'" },
-    { name = "nvidia-nvjitlink-cu12", marker = "sys_platform == 'linux'" },
-    { name = "nvidia-nvshmem-cu12", marker = "sys_platform == 'linux'" },
-    { name = "setuptools", marker = "sys_platform == 'linux'" },
-    { name = "sympy", marker = "sys_platform == 'linux'" },
-    { name = "triton", marker = "sys_platform == 'linux'" },
-    { name = "typing-extensions", marker = "sys_platform == 'linux'" },
+    { name = "cuda-bindings" },
+    { name = "cuda-toolkit", extra = ["cublas", "cudart", "cufft", "cufile", "cupti", "curand", "cusolver", "cusparse", "nvrtc", "nvtx"] },
+    { name = "filelock" },
+    { name = "fsspec" },
+    { name = "jinja2" },
+    { name = "networkx" },
+    { name = "nvidia-cudnn-cu12" },
+    { name = "nvidia-cusparselt-cu12" },
+    { name = "nvidia-nccl-cu12" },
+    { name = "nvidia-nvjitlink-cu12" },
+    { name = "nvidia-nvshmem-cu12" },
+    { name = "setuptools" },
+    { name = "sympy" },
+    { name = "triton" },
+    { name = "typing-extensions" },
 ]
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cu126/torch-2.14.1%2Bcu126-cp311-cp311-manylinux_2_28_aarch64.whl", hash = "sha256:4e3d23d194dac91c6a1f6f55c77b9171007908ede0ea3ae87b9ea64994e6a548", upload-time = "2026-09-30T19:54:24Z" },
@@ -1476,10 +1481,10 @@ name = "torchmetrics"
 version = "1.9.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "lightning-utilities", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "packaging", marker = "sys_platform == 'linux'" },
-    { name = "torch", marker = "sys_platform == 'linux'" },
+    { name = "lightning-utilities" },
+    { name = "numpy" },
+    { name = "packaging" },
+    { name = "torch" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/81/34/39b8b749333db56c0585d7a11fa62a283c087bb1dfc897d69fb8cedbefb1/torchmetrics-1.9.0.tar.gz", hash = "sha256:a488609948600df52d3db4fcdab02e62aab2a85ef34da67037dc3e65b8512faa", size = 581765, upload-time = "2026-03-09T17:41:22.443Z" }
 wheels = [
@@ -1491,10 +1496,10 @@ name = "torchtext"
 version = "0.18.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "requests", marker = "sys_platform == 'linux'" },
-    { name = "torch", marker = "sys_platform == 'linux'" },
-    { name = "tqdm", marker = "sys_platform == 'linux'" },
+    { name = "numpy" },
+    { name = "requests" },
+    { name = "torch" },
+    { name = "tqdm" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/13/0a/0d1e5426dbab2171551fe1b53e3ed80f42dbcadf7c28cc3676f0e311dc2f/torchtext-0.18.0-cp311-cp311-manylinux1_x86_64.whl", hash = "sha256:7ac7a392ae42d8b7675bdb31f1764bec77d4dec3a44bca5a2644c2cee3484453", size = 2021969, upload-time = "2024-04-24T15:49:39.909Z" },
@@ -1505,9 +1510,9 @@ name = "torchvision"
 version = "0.29.1+cu126"
 source = { registry = "https://download.pytorch.org/whl/cu126" }
 dependencies = [
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "pillow", marker = "sys_platform == 'linux'" },
-    { name = "torch", marker = "sys_platform == 'linux'" },
+    { name = "numpy" },
+    { name = "pillow" },
+    { name = "torch" },
 ]
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cu126/torchvision-0.29.1%2Bcu126-cp311-cp311-manylinux_2_28_aarch64.whl", hash = "sha256:43a992fee7907929e978940a7ac0ea6d6aaaeb8246dc77754c587432a6396827", upload-time = "2026-09-30T15:46:21Z" },
@@ -1525,22 +1530,22 @@ wheels = [
 
 [[package]]
 name = "transformers"
-version = "5.19.0"
+version = "5.22.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "huggingface-hub", marker = "sys_platform == 'linux'" },
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "packaging", marker = "sys_platform == 'linux'" },
-    { name = "pyyaml", marker = "sys_platform == 'linux'" },
-    { name = "regex", marker = "sys_platform == 'linux'" },
-    { name = "safetensors", marker = "sys_platform == 'linux'" },
-    { name = "tokenizers", marker = "sys_platform == 'linux'" },
-    { name = "tqdm", marker = "sys_platform == 'linux'" },
-    { name = "typer", marker = "sys_platform == 'linux'" },
+    { name = "huggingface-hub" },
+    { name = "numpy" },
+    { name = "packaging" },
+    { name = "pyyaml" },
+    { name = "regex" },
+    { name = "safetensors" },
+    { name = "tokenizers" },
+    { name = "tqdm" },
+    { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/65/4c/70012ed0795235fb6bd7806fafd4a1842f03e49ebbfa3bb9580e451948ce/transformers-5.19.0.tar.gz", hash = "sha256:87f38dd25e4521151b97e94520ac457f44a0ae8a8358a5b112daff6c64a822d6", size = 10032022, upload-time = "2026-10-06T16:39:00.229Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/42/54/b040ac523bad74f303d032505e3464cf4794f9d51defc8981ec66001936e/transformers-5.22.2.tar.gz", hash = "sha256:55f57e5cbd7c0b500b7a706daa0ecd76567b56ca139e6e02ef0bba0437e3a763", size = 10383941, upload-time = "2026-11-06T15:42:57.587Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b9/59/1e7f1212c215c73690ae6cab4678efe1555ff985953e145d88cc212859b0/transformers-5.19.0-py3-none-any.whl", hash = "sha256:afcd2dd5f603ed28c1e1fcb00a338ccbb4ef5f878ed289635df8b58187afb518", size = 12599123, upload-time = "2026-10-06T16:38:56.794Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/bb/cc0b27a3000ddcf4903d3a26983c8b4c9a36050bbaf05675f353e8bcb08c/transformers-5.22.2-py3-none-any.whl", hash = "sha256:829c2820aff91730b8ec45a4b8ff4be07f586a140b68a9073998b36fa35297dc", size = 13053178, upload-time = "2026-11-06T15:42:54.257Z" },
 ]
 
 [[package]]
@@ -1575,10 +1580,10 @@ name = "typer"
 version = "0.24.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "annotated-doc", marker = "sys_platform == 'linux'" },
-    { name = "click", marker = "sys_platform == 'linux'" },
-    { name = "rich", marker = "sys_platform == 'linux'" },
-    { name = "shellingham", marker = "sys_platform == 'linux'" },
+    { name = "annotated-doc" },
+    { name = "click" },
+    { name = "rich" },
+    { name = "shellingham" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/f5/24/cb09efec5cc954f7f9b930bf8279447d24618bb6758d4f6adf2574c41780/typer-0.24.1.tar.gz", hash = "sha256:e39b4732d65fbdcde189ae76cf7cd48aeae72919dea1fdfc16593be016256b45", size = 118613, upload-time = "2026-02-21T16:54:40.609Z" }
 wheels = [
@@ -1599,7 +1604,7 @@ name = "typing-inspection"
 version = "0.4.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "typing-extensions", marker = "sys_platform == 'linux'" },
+    { name = "typing-extensions" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/55/e3/70399cb7dd41c10ac53367ae42139cf4b1ca5f36bb3dc6c9d33acdb43655/typing_inspection-0.4.2.tar.gz", hash = "sha256:ba561c48a67c5958007083d386c3295464928b01faa735ab8547c5692e87f464", size = 75949, upload-time = "2025-10-01T02:14:41.687Z" }
 wheels = [
@@ -1626,22 +1631,23 @@ wheels = [
 
 [[package]]
 name = "weasel"
-version = "1.0.0"
+version = "1.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "cloudpathlib", marker = "sys_platform == 'linux'" },
-    { name = "confection", marker = "sys_platform == 'linux'" },
-    { name = "httpx", marker = "sys_platform == 'linux'" },
-    { name = "packaging", marker = "sys_platform == 'linux'" },
-    { name = "pydantic", marker = "sys_platform == 'linux'" },
-    { name = "smart-open", marker = "sys_platform == 'linux'" },
-    { name = "srsly", marker = "sys_platform == 'linux'" },
-    { name = "typer", marker = "sys_platform == 'linux'" },
-    { name = "wasabi", marker = "sys_platform == 'linux'" },
+    { name = "click" },
+    { name = "cloudpathlib" },
+    { name = "confection" },
+    { name = "httpx" },
+    { name = "packaging" },
+    { name = "pydantic" },
+    { name = "smart-open", extra = ["http"] },
+    { name = "srsly" },
+    { name = "typer" },
+    { name = "wasabi" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ce/e5/e272bb9a045105a1fdf4b798d8086f5932a178f4d738f17a74f5c9e0ae9a/weasel-1.0.0.tar.gz", hash = "sha256:7b129b44c90cc543b760532974ca1e4eb30dad2aa2026f57bdce66354ae610fc", size = 38682, upload-time = "2026-03-20T08:10:25.266Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d7/bf/490fc13b28ad51b6c5c36d2abae1b9b64101d24ec7cb2aefa7d6504fd5cf/weasel-1.0.1.tar.gz", hash = "sha256:ca5dbfd24002dd85bd8a73a7f02d2471744c1b1a64d25698e05bb587a099a43e", size = 39092, upload-time = "2026-10-26T14:34:11.161Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0a/07/57ebf7a6798b016c064bd0ca81b4c6a99daa4dc377b898bc7b41eb6b5af0/weasel-1.0.0-py3-none-any.whl", hash = "sha256:89518acee027f49d743126c3502d35e6dd14f5768be5c37c9af47c171b6005cc", size = 50713, upload-time = "2026-03-20T08:10:23.637Z" },
+    { url = "https://files.pythonhosted.org/packages/89/66/53b57003567d506e2f0f7b9859a4d2e6e748d3f0ed8f494b98f684d6696d/weasel-1.0.1-py3-none-any.whl", hash = "sha256:a7d37540e4b5e53c783bae292d2e5dfaa8f6054160cec633e0782afce89c504d", size = 51002, upload-time = "2026-10-26T14:34:09.987Z" },
 ]
 
 [[package]]
@@ -1664,8 +1670,8 @@ name = "xformers"
 version = "0.0.35"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy", marker = "sys_platform == 'linux'" },
-    { name = "torch", marker = "sys_platform == 'linux'" },
+    { name = "numpy" },
+    { name = "torch" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/de/5a/6e27734bd793adc44d0b8d294e67cfacf4ec590572c1aef51d683fc7a791/xformers-0.0.35.tar.gz", hash = "sha256:f7fc183a58e4bf0e2ae339a18fb1b1d4a37854c0f2545b4f360fef001646ab76", size = 4258182, upload-time = "2026-02-20T20:33:05.417Z" }
 wheels = [

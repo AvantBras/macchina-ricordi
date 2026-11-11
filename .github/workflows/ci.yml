@@ -16,7 +16,8 @@ concurrency:
 jobs:
   tests:
     name: Tests (Python ${{ matrix.python }})
-    runs-on: ubuntu-latest
+    # Keep system audio packages on a stable LTS image rather than a moving release.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -31,18 +32,30 @@ jobs:
         with:
           version: "0.9.5"
           enable-cache: true
-      - name: Install audio system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install --yes --no-install-recommends ffmpeg libsndfile1
       - name: Install base package and development tools only
         run: uv sync --locked --extra dev --python "${{ matrix.python }}"
+      - name: Ensure audio dependencies without apt mirrors
+        run: |
+          # SoundFile's Linux wheels bundle libsndfile. Use an isolated, pinned
+          # FFmpeg wheel only if the hosted image does not provide the executable.
+          uv run --no-sync python -c 'import soundfile; print("libsndfile", soundfile.__libsndfile_version__)'
+          if command -v ffmpeg >/dev/null; then
+            ffmpeg -version
+          else
+            ffmpeg_bin="$(uv run --no-project --with imageio-ffmpeg==0.6.0 python -c \
+              'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')"
+            mkdir -p "$RUNNER_TEMP/audio-bin"
+            ln -s "$ffmpeg_bin" "$RUNNER_TEMP/audio-bin/ffmpeg"
+            printf '%s\n' "$RUNNER_TEMP/audio-bin" >> "$GITHUB_PATH"
+            "$RUNNER_TEMP/audio-bin/ffmpeg" -version
+          fi
       - name: Run tests
         run: uv run --no-sync --python "${{ matrix.python }}" pytest
 
   checks:
     name: Lint, lockfiles and distributions
-    runs-on: ubuntu-latest
+    # Keep system audio packages on a stable LTS image rather than a moving release.
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7.0.1

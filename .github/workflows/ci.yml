@@ -32,34 +32,23 @@ jobs:
         with:
           version: "0.9.5"
           enable-cache: true
-      - name: Ensure audio system dependencies
-        run: |
-          # Hosted images normally include these. Avoid a network-only apt failure
-          # blocking tests when the required tools and shared library already work.
-          if command -v ffmpeg >/dev/null && python -c 'import ctypes; ctypes.CDLL("libsndfile.so.1")'; then
-            ffmpeg -version
-          else
-            # Some hosted-image mirror lists still point at the Azure HTTP
-            # endpoint, which can time out before tests even start. Use the
-            # official Ubuntu archive over HTTPS for those entries only.
-            sudo python - <<'PY'
-          from pathlib import Path
-          paths = [Path("/etc/apt/apt-mirrors.txt"), Path("/etc/apt/sources.list")]
-          paths += list(Path("/etc/apt/sources.list.d").glob("*.sources"))
-          paths += list(Path("/etc/apt/sources.list.d").glob("*.list"))
-          for path in paths:
-              if path.is_file():
-                  old = path.read_text()
-                  new = old.replace("http://azure.archive.ubuntu.com/ubuntu", "https://archive.ubuntu.com/ubuntu")
-                  if new != old:
-                      path.write_text(new)
-          PY
-            sudo timeout 120s apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 update
-            sudo timeout 180s apt-get -o Acquire::Retries=1 -o Acquire::http::Timeout=20 install \
-              --yes --no-install-recommends ffmpeg libsndfile1
-          fi
       - name: Install base package and development tools only
         run: uv sync --locked --extra dev --python "${{ matrix.python }}"
+      - name: Ensure audio dependencies without apt mirrors
+        run: |
+          # SoundFile's Linux wheels bundle libsndfile. Use an isolated, pinned
+          # FFmpeg wheel only if the hosted image does not provide the executable.
+          uv run --no-sync python -c 'import soundfile; print("libsndfile", soundfile.__libsndfile_version__)'
+          if command -v ffmpeg >/dev/null; then
+            ffmpeg -version
+          else
+            ffmpeg_bin="$(uv run --no-project --with imageio-ffmpeg==0.6.0 python -c \
+              'import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())')"
+            mkdir -p "$RUNNER_TEMP/audio-bin"
+            ln -s "$ffmpeg_bin" "$RUNNER_TEMP/audio-bin/ffmpeg"
+            printf '%s\n' "$RUNNER_TEMP/audio-bin" >> "$GITHUB_PATH"
+            "$RUNNER_TEMP/audio-bin/ffmpeg" -version
+          fi
       - name: Run tests
         run: uv run --no-sync --python "${{ matrix.python }}" pytest
 

@@ -86,8 +86,8 @@ python -m macchina_ricordi.cli play monitor --session 20261005T141908Z
 ```python
 from macchina_ricordi.sessions.store import list_sessions, find_session, find_take, seal_session, new_session_dir
 
-session = find_session("20261005T141908Z")      # Session: id, kind, path, models, sigs, controls, take_count
-for take in session.takes():                    # Take: index, audio, label, role, model, seed, controls, scores
+session = find_session("20261005T141908Z")  # Session: id, kind, path, models, sigs, controls, take_count
+for take in session.takes():  # Take: index, audio, label, role, model, seed, controls, scores
     ...
 ```
 

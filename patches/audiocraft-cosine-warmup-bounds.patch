@@ -1,0 +1,60 @@
+diff --git a/audiocraft/optim/cosine_lr_scheduler.py b/audiocraft/optim/cosine_lr_scheduler.py
+index 1e4f0bb..ada1e6c 100644
+--- a/audiocraft/optim/cosine_lr_scheduler.py
++++ b/audiocraft/optim/cosine_lr_scheduler.py
+@@ -4,18 +4,21 @@
+ # This source code is licensed under the license found in the
+ # LICENSE file in the root directory of this source tree.
+ 
++import logging
+ import math
+ 
+ from torch.optim import Optimizer
+ from torch.optim.lr_scheduler import _LRScheduler
+ 
++logger = logging.getLogger(__name__)
++
+ 
+ class CosineLRScheduler(_LRScheduler):
+     """Cosine LR scheduler.
+ 
+     Args:
+         optimizer (Optimizer): Torch optimizer.
+-        warmup_steps (int): Number of warmup steps.
++        warmup_steps (int): Number of warmup steps. A value of at least total_steps is cut to a tenth of it.
+         total_steps (int): Total number of steps.
+         lr_min_ratio (float): Minimum learning rate.
+         cycle_length (float): Cycle length.
+@@ -28,14 +31,28 @@ class CosineLRScheduler(_LRScheduler):
+         assert self.total_steps >= 0
+         self.lr_min_ratio = lr_min_ratio
+         self.cycle_length = cycle_length
++        if self.total_steps > 0 and self.warmup_steps >= self.total_steps:
++            logger.warning(
++                "Cosine warm-up of %d updates is not shorter than the run's %d updates, which would leave no decay. "
++                "Using %d warm-up updates instead.",
++                self.warmup_steps, self.total_steps, self.effective_warmup_steps)
+         super().__init__(optimizer)
+ 
++    @property
++    def effective_warmup_steps(self) -> int:
++        """Warm-up length actually used. A warm-up at least as long as the run leaves no decay phase, and the
++        decay divides by total - warm-up, so it is cut to a tenth of the run."""
++        if self.total_steps > 0 and self.warmup_steps >= self.total_steps:
++            return self.total_steps // 10
++        return self.warmup_steps
++
+     def _get_sched_lr(self, lr: float, step: int):
+-        if step < self.warmup_steps:
+-            lr_ratio = step / self.warmup_steps
++        warmup_steps = self.effective_warmup_steps
++        if step < warmup_steps:
++            lr_ratio = step / warmup_steps
+             lr = lr_ratio * lr
+-        elif step <= self.total_steps:
+-            s = (step - self.warmup_steps) / (self.total_steps - self.warmup_steps)
++        elif self.total_steps > warmup_steps and step <= self.total_steps:
++            s = (step - warmup_steps) / (self.total_steps - warmup_steps)
+             lr_ratio = self.lr_min_ratio + 0.5 * (1 - self.lr_min_ratio) * \
+                 (1. + math.cos(math.pi * s / self.cycle_length))
+             lr = lr_ratio * lr

@@ -77,7 +77,8 @@ OVERRIDE_GUIDE: tuple[dict[str, str], ...] = (
         "group": "Length and schedule",
         "key": "schedule.cosine.warmup",
         "default": "4000",
-        "what": "Linear warm-up, in updates (4000 = two epochs at 2000 updates each).",
+        "what": "Linear warm-up, in updates. It must be shorter than the whole run: a warm-up at least as long as the "
+        "run is cut to a tenth of it, and the log says so.",
     },
     {
         "group": "Length and schedule",

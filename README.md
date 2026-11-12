@@ -49,12 +49,16 @@ make test
 make lint
 ```
 
-The fast CI workflow runs base-plus-dev tests on Python 3.11 and 3.12, checks both
-lockfiles, and runs lint, formatting, and archive builds. It runs on pull requests,
+The fast CI workflow runs base-plus-dev tests on Python 3.11 and 3.12, checks the root
+lockfile, and runs correctness lint and archive builds. Formatting is optional; the
+MusicGen lockfile check is a separate, non-blocking advisory. CI runs on pull requests,
 pushes to `main`, and manual dispatch. The separate macOS workflow builds and exercises
 the appliance for relevant changes; PR builds use only its random test model, not your
 release models. If you choose a default branch other than `main`, update the branch
 filters and trusted-release condition in `.github/workflows/` to match.
+
+See [Contributing](CONTRIBUTING.md) for the small-change workflow and
+[repository protection](docs/repository-protection.md) for the prepared publication guardrails.
 
 ## A model to start with
 

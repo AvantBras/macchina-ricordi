@@ -52,6 +52,13 @@ updates:
       # pins pandas<3.0.0, so a 3.x bump would break the lockfile.
       - dependency-name: "pandas"
         update-types: ["version-update:semver-major"]
+      # The same optional extra caps numpy<2 and librosa<0.11. Keep patch
+      # updates available, but stop retrying incompatible release families.
+      # These version-update-only rules leave security fixes eligible.
+      - dependency-name: "numpy"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "librosa"
+        update-types: ["version-update:semver-minor", "version-update:semver-major"]
       # Optional ML extras (semantic-listening / captioner-witness) are large,
       # GPU-bound and upstream-gated. Ignore their routine version updates at
       # every level. This is NOT a blanket ignore: `update-types` filters only

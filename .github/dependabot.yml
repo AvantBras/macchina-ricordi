@@ -1,68 +1,104 @@
-# Dependabot version updates — kept intentionally light.
+# Dependabot — deliberately low-noise version-update policy.
 #
-# This file only controls *version* updates (new releases).
-# *Security* updates (CVE-driven PRs) are a separate GitHub feature:
-# enable them at Settings → Code security → Dependabot security updates.
-# Those open automatically the moment a vulnerability is filed against any
-# pinned dependency — no schedule, highest-priority supply chain defence.
+# Scope: this file configures *version* updates only (routine new releases).
+# *Security* updates (CVE-driven PRs) are a separate GitHub feature; they run only
+# once you enable them in repository Settings → Code security, and no rule in this
+# file can switch that feature on.
 #
-# Supply chain threat model covered here:
-#  - Compromised maintainer release: security updates (above) catch CVEs fast.
-#  - Stale deps as soft targets: weekly version bumps keep the window small.
-#  - Dependency confusion / unusual version jumps: grouped PRs make each bump
-#    visible as a reviewable diff rather than a silent lock-file change.
-#  - Compromised GitHub Actions (GhostAction-style injection, 2025): the
-#    github-actions entry below auto-patches action pins when new versions drop.
+# The options used here preserve security fixes:
+#  - an `ignore` entry carrying `update-types` filters version updates only, so the
+#    packages ignored below still receive security updates (an `ignore` on
+#    `versions` instead *would* suppress them — not used here);
+#  - `open-pull-requests-limit: 0` disables version updates but not security
+#    updates, which have their own internal limit.
+# Not every option is version-only, though: some (a `versions` ignore, for
+# example) also change how security-update PRs are created, so check the options
+# reference before extending this file.
+#
+# Dependabot opens a pull request per batch and keeps pushing fresh commits to
+# that PR's own branch as it re-runs; it never merges one. No auto-merge is
+# configured here, so every bump is a review, never a silent landing.
+#
+# Rationale for the cadence and grouping:
+#  - Monthly, daytime, single grouped PR per ecosystem: small, predictable review
+#    load with the noise of a large dependency surface folded into one diff.
+#  - Routine release churn in the heavy, GPU-bound optional ML extras is ignored
+#    (see `ignore` below) so those PRs stop dominating the queue; genuine security
+#    fixes still arrive because `update-types` only filters version updates.
+#  - The MusicGen runtime keeps a monthly entry with version updates disabled so
+#    its lock can still receive security fixes without routine-version noise.
 
 version: 2
 updates:
   # ── Root Python project ────────────────────────────────────────────────────
   # "uv", not "pip": the project is locked with uv.lock and the uv ecosystem
-  # regenerates it. With "pip", update PRs changed pyproject.toml alone and
-  # failed the lockfile checks.
+  # updates that lock, so each PR carries a matching lock-file diff. With "pip",
+  # update PRs changed pyproject.toml alone and failed the lockfile checks.
   - package-ecosystem: "uv"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "monthly"
       time: "09:00"
-    # All updates batched into a single PR — one review, not ten.
+      timezone: "Europe/Paris"
+    # All routine updates batched into a single PR — one review, not ten.
     groups:
       python-root:
+        applies-to: version-updates
         patterns: ["*"]
+    # Version-update PRs are capped at one grouped PR at a time.
+    open-pull-requests-limit: 1
     ignore:
-      # msclap (the semantic-listening extra) requires pandas<3.0.0, so pandas 3.x cannot be locked.
+      # pandas 3.x cannot be locked: msclap (the semantic-listening extra)
+      # pins pandas<3.0.0, so a 3.x bump would break the lockfile.
       - dependency-name: "pandas"
         update-types: ["version-update:semver-major"]
-    open-pull-requests-limit: 2
+      # Optional ML extras (semantic-listening / captioner-witness) are large,
+      # GPU-bound and upstream-gated. Ignore their routine version updates at
+      # every level. This is NOT a blanket ignore: `update-types` filters only
+      # version updates, so security updates for these packages still open.
+      - dependency-name: "torch"
+        update-types: ["version-update:semver-patch", "version-update:semver-minor", "version-update:semver-major"]
+      - dependency-name: "transformers"
+        update-types: ["version-update:semver-patch", "version-update:semver-minor", "version-update:semver-major"]
+      - dependency-name: "bitsandbytes"
+        update-types: ["version-update:semver-patch", "version-update:semver-minor", "version-update:semver-major"]
+      - dependency-name: "accelerate"
+        update-types: ["version-update:semver-patch", "version-update:semver-minor", "version-update:semver-major"]
+      - dependency-name: "msclap"
+        update-types: ["version-update:semver-patch", "version-update:semver-minor", "version-update:semver-major"]
     commit-message:
       prefix: "deps"
 
-  # ── MusicGen runtime (separate venv / pyproject) ───────────────────────────
-  # Locked with musicgen/uv.lock. torch resolves only from the cu126 index in
-  # musicgen/pyproject.toml, so some torch releases cannot be locked here.
-  - package-ecosystem: "uv"
-    directory: "/musicgen"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-    groups:
-      python-musicgen:
-        patterns: ["*"]
-    open-pull-requests-limit: 2
-    commit-message:
-      prefix: "deps(musicgen)"
-
   # ── GitHub Actions ─────────────────────────────────────────────────────────
-  # Monthly cadence — actions are less volatile than Python dependencies.
+  # Monthly cadence — action pins are less volatile than Python dependencies.
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "monthly"
+      time: "09:00"
+      timezone: "Europe/Paris"
     groups:
       actions:
+        applies-to: version-updates
         patterns: ["*"]
     open-pull-requests-limit: 1
     commit-message:
       prefix: "ci"
+
+  # ── MusicGen runtime (separate venv / pyproject) ───────────────────────────
+  # The `uv` ecosystem run against this directory reads musicgen/pyproject.toml
+  # and updates the matching lock, musicgen/uv.lock — not the root uv.lock.
+  # torch resolves only from the cu126 index in musicgen/pyproject.toml, so some
+  # torch releases cannot be locked here.
+  # Routine version updates are switched off (open-pull-requests-limit: 0) to keep
+  # churn out of the queue; this does not affect security updates, so an advisory
+  # against a locked runtime dependency can still update musicgen/uv.lock.
+  - package-ecosystem: "uv"
+    directory: "/musicgen"
+    schedule:
+      interval: "monthly"
+      time: "09:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 0
+    commit-message:
+      prefix: "deps(musicgen)"

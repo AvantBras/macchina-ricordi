@@ -64,7 +64,6 @@ target-version = "py311"
 extend-exclude = [".venv", ".venv-musicgen", ".audiocraft", ".dora", "musicgen", "research"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]
-
-[tool.ruff.lint.per-file-ignores]
-"tests/*" = ["E501"]
+# Correctness only, deliberately low-noise: F (Pyflakes) + B (flake8-bugbear).
+# Stylistic/import-sorting rulesets (E, I, UP) are intentionally not selected.
+select = ["F", "B"]

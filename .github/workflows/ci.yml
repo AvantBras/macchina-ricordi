@@ -52,6 +52,11 @@ jobs:
       - name: Run tests
         run: uv run --no-sync --python "${{ matrix.python }}" pytest
 
+  # NOTE: keep this job's name stable. Branch protection may reference it as a
+  # required status check, and renaming it can silently drop that requirement.
+  # Whether it is actually required is set in repository settings and cannot be
+  # verified from CI — the branch-protection API returns 403 on private repos
+  # without the required plan.
   checks:
     name: Lint, lockfiles and distributions
     # Keep system audio packages on a stable LTS image rather than a moving release.
@@ -66,17 +71,35 @@ jobs:
         with:
           version: "0.9.5"
           enable-cache: true
-      - name: Check both lockfiles without installing the GPU runtime
-        run: |
-          uv lock --check
-          uv lock --project musicgen --check
+      - name: Check the root lockfile
+        run: uv lock --check
       - name: Install base package and development tools only
         run: uv sync --locked --extra dev
-      - name: Lint and formatting
-        run: |
-          uv run --no-sync ruff check .
-          uv run --no-sync ruff format --check .
+      # Correctness-only lint (Ruff F = Pyflakes, B = flake8-bugbear). Formatting
+      # is intentionally not enforced here; see `make format`.
+      - name: Ruff lint (correctness)
+        run: uv run --no-sync ruff check .
       # Building archives checks packaging, not standalone wheel support.
       # The supported installation remains an editable source checkout.
       - name: Build source and wheel archives
         run: uv build
+
+  # Non-blocking: the MusicGen lockfile is checked in isolation, without the GPU
+  # runtime, models or heavy installs, and without a `needs` edge so it never
+  # gates or is gated by the required jobs.
+  musicgen-lock:
+    name: MusicGen lockfile (non-blocking)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.11"
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          version: "0.9.5"
+          enable-cache: true
+      - name: Check the MusicGen lockfile without installing the GPU runtime
+        run: uv lock --project musicgen --check

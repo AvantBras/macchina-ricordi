@@ -45,6 +45,37 @@ also need a runtime health check, generation with a trained model, and a small r
 the target GPU. Recheck dependency advisories whenever the runtime lock changes; a clean audit is
 not a guarantee that the runtime is a sandbox or that untrusted input is safe.
 
+### Accepted maintenance policy
+
+Routine Python and GitHub Actions version updates run on a low-frequency (monthly) cadence.
+Dependabot (`.github/dependabot.yml`) raises them as grouped, reviewable PRs, so each bump shows up
+as a diff instead of a silent lock-file change. It uses the `uv` ecosystem, not `pip`, so each entry
+updates its own lock (`uv.lock` at the root, `musicgen/uv.lock` for the runtime); a `pip`-style change
+to `pyproject.toml` alone fails the lockfile check in CI. The suppression of routine ML-extra updates
+is version-only (`ignore` with `update-types`, plus a zero version-PR limit on the MusicGen entry), so
+those packages still receive security updates. Lint is correctness-only (`ruff check`, the `F`/`B`
+rules); `ruff format` is optional and applied by hand. A lockfile advisory is advisory only: review
+it, but it does not block other work.
+
+GPU-stack upgrades (torch and the CUDA-index wheel set in the MusicGen runtime) are deliberate and
+manual, never auto-merged. There is no automated GPU test infrastructure, so validate one locally in
+an isolated worktree — runtime setup, runtime check, generation from a trained model, a tiny
+training epoch, and a checkpoint reload — before adopting it in the working environment. The exact
+commands are in [docs/musicgen.md](docs/musicgen.md#maintaining-the-runtime).
+
+Security alerts and Dependabot security (fix) PRs are enabled. These arrive outside the routine
+monthly version schedule and are handled as they come; there is no guarantee of an instant fix PR
+for every advisory.
+
+### Shared root environment
+
+The root project's optional ML extras — `semantic-listening` and `captioner-witness` — pull heavy ML
+dependencies (msclap, torch, transformers) into the shared root `.venv`. Because they share that
+environment, their updates follow the same deliberate, manually validated policy as the MusicGen
+runtime rather than the routine monthly cadence. The `instrument` extra is not in this group: it
+pulls only ordinary audio packages (`sounddevice`, `soundfile`), so it stays on the routine monthly
+cadence.
+
 ## Sharing reports and reporting problems
 
 Review logs, sidecars and metadata before sharing: local dataset paths and experiment details may

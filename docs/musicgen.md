@@ -61,6 +61,47 @@ python -m macchina_ricordi.cli runtime check \
   --audiocraft-dir /path/to/audiocraft
 ```
 
+### Maintaining the runtime
+
+The MusicGen runtime is locked with `musicgen/uv.lock`, separate from the root project's `uv.lock`
+(see [Security and trust boundaries](../SECURITY.md#accepted-maintenance-policy) for the policy).
+Routine Python and GitHub Actions version updates are accepted on a low-frequency monthly cadence
+and arrive as grouped Dependabot PRs; each entry updates its own lockfile (`uv.lock` at the root,
+`musicgen/uv.lock` here). A lockfile advisory is advisory only and does not block other work. Lint is
+correctness-only (`ruff check`, the `F`/`B` rules); formatting is optional.
+
+GPU-stack upgrades (torch and the CUDA-index wheel set) are never auto-merged. Validate one locally
+in an isolated worktree before adopting it in your working environment. The block below is a
+reproducible **template**: both paths are placeholders, so nothing runs until you set them to files
+you actually have.
+
+```bash
+# Replace both with absolute paths you own (a template, not real sample paths):
+MODEL=/absolute/path/to/your/trusted/bundle         # a portable bundle you exported (models.md#export)
+DATASET=/absolute/path/to/prepared-smoke-workspace  # a small workspace `data build` made; not a production set
+
+# 1. build the runtime from the locked project (isolated worktree), then health-check it
+make setup-musicgen
+uv run --no-sync ricordi runtime check
+# 2. generate from a known-trained model, independently of any new training
+uv run --no-sync ricordi play generate "$MODEL" --duration-seconds 2
+# 3. train one tiny, bounded epoch from scratch (reshape-nano; needs clips >= 2 s for the 2 s segment)
+uv run --no-sync ricordi train run --recipe reshape-nano --dataset "$DATASET" --epochs 1 \
+  --override optim.updates_per_epoch=2 --override dataset.train.num_samples=4 \
+  --override dataset.valid.num_samples=2 --override dataset.generate.num_samples=2 \
+  --override dataset.num_workers=0 --override dataset.batch_size=2 \
+  --override dataset.segment_duration=2 --override checkpoint.save_every=1
+# 4. set SMOKE_XP to the absolute XP path step 3 printed (do not invent a signature), then generate
+SMOKE_XP=/absolute/path/to/worktree/.dora/xps/REPLACE_WITH_PRINTED_SIG
+uv run --no-sync ricordi play generate --xp-path "$SMOKE_XP" --checkpoint 1 \
+  --duration-seconds 2 --extend-stride 1
+```
+
+Step 4 generates independently from the model that step 3 trained; it does not warm-start, so it
+assumes no foreign checkpoint shape. A lockfile check proves resolution, not GPU compatibility: these
+four steps are the local gate, and there is no automated GPU CI, so a change that only passes the
+lockfile check has not been shown to work on the target GPU.
+
 ## 2. Build A Dataset
 
 A dataset is built once, in one step, into `datasets/<name>/`: the clips gathered from

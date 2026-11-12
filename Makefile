@@ -6,12 +6,13 @@ install:
 test:
 	uv run pytest
 
+# Correctness lint only (Ruff F + B); formatting is not enforced here.
 lint:
 	uv run ruff check .
-	uv run ruff format --check .
 
+# Optional formatter. Applies formatting only — no automatic bug fixes.
+# Run `uv run ruff check --fix .` explicitly when you want autofixes.
 format:
-	uv run ruff check --fix .
 	uv run ruff format .
 
 setup-musicgen:

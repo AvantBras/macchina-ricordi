@@ -1,7 +1,5 @@
 # macchina ricordi
 
-For Pierre-André Arcand.
-
 A personal, experimental toolbox for training small music models on records you own, then playing them:
 
 - **the stream**: live, steerable generation on a GPU, round by round, from a keyboard TUI
@@ -177,3 +175,13 @@ Model weights have a separate licence chosen by their publisher; check the bundl
 The default EnCodec codec is released by Meta under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
 Portable bundles reference it as a separate download; `.nrbox` files include codec weights/graphs and carry those
 licence obligations. The code's MIT licence does not replace the model or codec licences.
+
+## About the name
+
+I didn't invent the name *macchina ricordi*: it comes from the work of
+[Pierre-André Arcand](https://fr.wikipedia.org/wiki/Pierre-Andr%C3%A9_Arcand), who created an
+instrument of that name for recording and layering evolving sound loops. That connection to
+repetition, recorded memory and transformation felt fitting for this toolbox.
+
+The name is a nod to his work, not a claim of affiliation or endorsement. If you feel its use
+here is inappropriate, please open an issue—I'm open to changing it.
